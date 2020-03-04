@@ -1,0 +1,66 @@
+---
+title: "Introduction to R"
+author: "BBL"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: ioslides_presentation
+logo: images/Rlogo.png
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Day 1 goals {.build}
+
+>- Introduce R: what it is, and why that goofy name
+>- Understand a bit about R's capabilities and why people use it
+>- Install R and RStudio and understand the difference between them
+>- Starting RStudio and looking around
+>- Do some computing in R
+>- Objects: _variables_ and _functions_
+
+## What is "R"?
+
+>R is a **programming language and free software environment for statistical computing** and graphics supported by the R Foundation for Statistical Computing. The R language is widely used among statisticians and data miners for developing statistical software and data analysis.
+
+https://en.wikipedia.org/wiki/R_(programming_language)
+
+>R is named partly after the first names of the first two R authors and partly as a play on the name of [an earlier programming language called] S. The project was conceived in 1992, with an initial version released in 1995 and a stable beta version (v1.0) on February, 29th 2000.
+
+## Why use it?
+
+R offers powerful and flexible _data processing_, beautiful _graphics_, and the ability to analyze data more more quickly and reproducibly than e.g. Excel.
+
+```{r, out.width = "67%", echo=FALSE}
+knitr::include_graphics("images/rstudio-windows.png")
+```
+
+## Why use it?
+
+R is command-line software: you type and the computer (well, R) computes, displays figures...whatever you order it to do.
+
+RStudio is a popular _interface_ for R. It sits on top of R, and it allows users to more easily (for many people) interact with and use the underlying R.
+
+## Installation
+
+First, R: https://cran.r-project.org
+
+Second, RStudio: https://rstudio.com/products/rstudio/
+
+## Let's look around RStudio
+
+(Using RStudio.)
+
+In particular:
+* The _console_
+* The _editor_
+
+## Do something with R
+
+We can type calculations into the console and R will immediately respond:
+```{r calculator, echo=TRUE}
+1 + 1
+2 * 3
+(135 + 2) ^ 3
+```
+
