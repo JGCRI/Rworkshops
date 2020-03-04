@@ -4,6 +4,7 @@ author: "BBL"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: ioslides_presentation
 logo: images/Rlogo.png
+incremental: true
 ---
 
 ```{r setup, include=FALSE}
@@ -12,12 +13,17 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Day 1 goals {.build}
 
->- Introduce R: what it is, and why that goofy name
+Introduce R
+
+>- What it is, and why that goofy name
 >- Understand a bit about R's capabilities and why people use it
 >- Install R and RStudio and understand the difference between them
->- Starting RStudio and looking around
->- Do some computing in R
+>- Start RStudio and look around
+
+Do some computing in R
+
 >- Objects: _variables_ and _functions_
+>- Sequences (vectors) and making comparisons
 
 ## What is "R"?
 
@@ -41,6 +47,8 @@ R is command-line software: you type and the computer (well, R) computes, displa
 
 RStudio is a popular _interface_ for R. It sits on top of R, and it allows users to more easily (for many people) interact with and use the underlying R.
 
+Us <---> RStudio <---> R
+
 ## Installation
 
 First, R: https://cran.r-project.org
@@ -49,18 +57,167 @@ Second, RStudio: https://rstudio.com/products/rstudio/
 
 ## Let's look around RStudio
 
-(Using RStudio.)
+In particular, we'll most use two parts of RStudio:
 
-In particular:
 * The _console_
 * The _editor_
 
+```{r, out.width = "50%", echo=FALSE}
+knitr::include_graphics("images/rstudio-windows-circles.png")
+```
+
 ## Do something with R
 
-We can type calculations into the console and R will immediately respond:
-```{r calculator, echo=TRUE}
+We can type calculations into the _console_ and R will immediately respond:
+
+```{r, echo=TRUE}
 1 + 1
 2 * 3
 (135 + 2) ^ 3
 ```
 
+## Do something with R {.build}
+
+We can create a _sequence_ (or a _vector_):
+
+```{r, echo=TRUE}
+1:10
+```
+
+Oooooh. What will this do?
+
+```{r, echo=TRUE}
+1:10 * 2
+```
+
+What R is doing here is a fundamental characteristic of the langauge.
+
+## Variables
+
+Our first _variable_ and our first _comment_ explaining what's going on:
+
+```{r, echo=TRUE}
+x <- 1   # assign the value "1" to the name "x"
+x
+x * 3
+```
+
+
+```{r, echo=TRUE}
+# R ignores anything after the '#' symbol
+# These comments are a critical way to make code readable to PEOPLE
+```
+
+## Variables
+
+We can have as many variables as we like (though there are some rules about naming them):
+
+```{r, echo=TRUE}
+my_variable <- 2 * 3 + 4
+z <- my_variable
+y <- 1000 + z
+y <- 23
+y
+```
+
+Note that `my_variable`, `x`, `y`, and `z` all refer to _separate objects_, whether or not they have identical values.
+
+## Sequences
+
+We saw `1:10` before but let's look at sequences (or _vectors_) a bit more.
+
+```{r, echo=TRUE}
+my_sequence <- 5:8
+my_sequence[2]
+my_sequence <- c(5, 3, 9, 1)
+my_sequence[1:2]
+```
+
+Here we also see another way of making a vector, the `c()` notation.
+
+## Variables
+
+Variables are often numeric, but don't have to be.
+
+```{r, echo=TRUE}
+a <- "hello"
+a
+b <- TRUE
+print(b)
+```
+
+## Functions
+
+Wait, what was the `print(b)` on the previous slide?
+
+Very broadly, there are two kinds of objects: variables and **functions**.
+
+Functions take inputs (technically called _parameters_) and produce an output.
+
+```{r, echo=TRUE}
+x <- c(1, 3, 4, 9)
+mean(x)
+```
+
+## Functions
+
+```{r, echo=TRUE}
+x <- c(1, 3, 4, 9)
+mean(x)
+```
+
+This the `mean` function, sending it the _object_ `x` and getting back its result.
+
+```{r, echo=TRUE}
+x <- c(1, 3, 4, 9)
+y <- x + 10
+z <- sum(y)
+print(z)
+```
+
+## Comparisons
+
+The double equals (`==`) is the standard in computer programming for making comparisons.
+
+```{r, echo=TRUE}
+1 == 1
+"ben" == "handsome"
+```
+
+Ouch.
+
+## Comparisons
+
+We can compare a sequence, producing another sequence:
+
+```{r, echo=TRUE}
+x <- c(1, 3, 2, 2, 3)
+x == 3
+any(x == 3)
+which(x == 3)
+```
+
+This nicely demonstrates R's `any` and `which` functions.
+
+## Comparisons {.build}
+
+What will this print? Why? Think about it before typing.
+
+```{r, echo=TRUE}
+x <- c(1, 3, 2, 2, 3)
+x_two_values <- which(x == 2)
+x[x_two_values]
+```
+
+## Summary
+
+What have we learned today in the R language?
+
+- R as a calculator
+- Assigning variables
+- Variables can have different types (numeric, character, logical, ...)
+- Variables can be sequences of values
+- Indexing sequences: `x[2]`
+- Functions
+- Making comparisons
+- Comments
