@@ -11,7 +11,7 @@ incremental: true
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Day 1 goals {.build}
+## Day 1 goals {.build data-background=#cceeff}
 
 Introduce R
 
@@ -221,3 +221,225 @@ What have we learned today in the R language?
 - Functions
 - Making comparisons
 - Comments
+
+## Day 2 goals {data-background=#cceeff} 
+
+- Review
+- Making a _script_ to run code
+- Control: `if` and `for`
+- Data frames
+- Reading data into R
+- Functions
+
+## Review and remember... {.build}
+
+- The difference between R and RStudio
+- Vectors (sequences) of numbers or other types of data
+- Variables and how they behave
+- Types of data/variables: numeric, character, logical
+- Comparing data
+- Built-in functions and how _they_ behave
+
+## Scripts
+
+<div class="columns-2">
+  Create a new script file in RMarkdown and let's make a short _program_:
+  
+```{r, echo=TRUE, include=TRUE, eval=FALSE}
+  x <- 1:10
+  print(sum(x))
+  print(paste("This is", x))
+  
+  plot(x)
+```
+
+  If you click `Source` in the upper-right of the window, R will execute
+  your commands one by one.
+  
+  <img src="images/rstudio-new-script.png" width = "100%">
+  
+  Scripts let us save work between sessions and generally make our lives easier.
+</div>
+
+## Flow control
+
+We often want to execute parts of our code multiple times, or make choices.
+
+R has a number of standard programming constructs to do this.
+
+```{r, echo=TRUE}
+x <- 5
+if(x > 3) {
+  # this block gets executed if the 'if' condition is TRUE
+  print("Greater than 3")
+} else {
+  # ...and this if it's FALSE
+  print("Less than or equal to 3")
+}
+```
+
+## Flow control
+
+`for` loops execute blocks of code multiple times.
+
+This is _very_ common in programming. It's less used in R, because of R's
+ability to do this 'in parallel' (e.g. `1:10 + 1`), but still sometimes 
+necessary or just handy.
+
+```{r, echo=TRUE}
+for(i in 1:10) {
+  print(paste("This is", i))   # we don't need a for loop to do this!
+}
+```
+
+## Data frames
+
+For many people this is the single most common data type they use in R.
+
+It's a _table of data_, where each column can be a different type.
+
+## Data frames
+
+<div class="columns-2">
+
+The `cars` dataset is one of many that comes with R.
+
+```{r, echo=TRUE}
+head(cars)
+dim(cars)  # dimensions
+summary(cars)
+plot(cars$speed, cars$dist)
+```
+
+</div>
+
+## Data frames
+
+Accessing rows and columns and entries of a data frame:
+
+```{r, echo=TRUE}
+cars[1,]
+cars[,1]
+cars[1,2]
+```
+
+## Data frames
+
+Accessing rows and columns and entries of a data frame:
+
+```{r, echo=TRUE}
+cars$speed
+mean(cars$dist)
+cars[1:3,]
+```
+
+## Data frames
+
+We saw plotting in base R briefly a few slides ago:
+
+```{r, echo=TRUE, eval=FALSE}
+plot(cars$speed, cars$dist)
+```
+
+But we can make a _much_ nicer plot...so it's time to use our first R package!
+
+## What's a package?
+
+R packages are collections of functions and data sets developed by the community. They increase the power of R by improving existing base R functionalities, or by adding new ones.
+
+(This [DataCamp page](https://www.datacamp.com/community/tutorials/r-packages-guide) has a good introduction.)
+
+```{r, echo=TRUE}
+library(ggplot2)
+```
+
+You may need to install ggplot2 first.
+
+<img src="images/rstudio-package-install.png" width = "80%">
+
+## Plotting cars
+
+```{r, echo=TRUE}
+library(ggplot2)  # load 'ggplot2' into our current library
+qplot(speed, dist, data = cars)
+```
+
+## Plotting cars
+
+```{r, echo=TRUE}
+qplot(speed, dist, color = speed, data = cars)
+```
+
+## Plotting cars
+
+```{r, echo=TRUE}
+qplot(speed, dist, size = dist, data = cars)
+```
+
+## Plotting cars
+
+```{r, echo=TRUE}
+qplot(speed, dist, color = speed, size = dist, data = cars)
+```
+
+## Plotting cars
+
+As long as we're talking about cars...
+
+1. Take a look at the `mpg` dataset (included with ggplot2)
+2. Use `summary` on it
+3. Use `qplot` to plot. Try plotting displacement (on the x axis) versus city mileage (y axis), coloring by class of car
+4. Try other plots!
+
+Remember, `qplot` is part of the `ggplot2` _package_.
+
+"A package is a like a book, a library is like a library; you use library() to check a package out of the library." [Source](https://twitter.com/hadleywickham/status/541948905009586176)
+
+## Making our own functions
+
+As we've seen, R has lots of built-in functions. These
+
+* Take zero or more _inputs_
+* Return zero or one _outputs_
+
+```{r, eval=FALSE, echo=TRUE}
+sum(1, 2) # 2 inputs -> 1 output
+print(1)  # 1 input -> 0 outputs
+```
+
+But we can also write out _own_ functions.
+
+## Making our own functions
+
+```{r, echo=TRUE}
+extract_row_1 <- function(x) {
+  return(x[1,])
+}
+
+extract_row_1(cars)
+extract_row_1(iris)
+```
+
+## Making our own functions
+
+Functions have their own "scope". **This is important.**
+
+```{r, echo=TRUE, eval=FALSE}
+x <- 1
+f <- function(x) {
+  print(x)
+}
+f(2)  # what gets printed?
+```
+
+Another example:
+
+```{r, echo=TRUE, eval=FALSE}
+x <- 1
+y <- 2
+f <- function(x) {
+  y <- x
+}
+f(2)  # what are the values of x and y after this?
+```
+
