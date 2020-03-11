@@ -228,7 +228,6 @@ What have we learned today in the R language?
 - Making a _script_ to run code
 - Control: `if` and `for`
 - Data frames
-- Reading data into R
 - Functions
 
 ## Review and remember... {.build}
@@ -361,7 +360,7 @@ You may need to install ggplot2 first.
 
 ```{r, echo=TRUE}
 library(ggplot2)  # load 'ggplot2' into our current library
-qplot(speed, dist, data = cars)
+qplot(speed, dist, data = cars)  # qplot is a function in ggplot2
 ```
 
 ## Plotting cars
@@ -443,3 +442,50 @@ f <- function(x) {
 f(2)  # what are the values of x and y after this?
 ```
 
+## Exercises {.build}
+
+Write a function that take two parameters, `x` and `n`, and
+returns the nth row of x.
+
+```{r, echo=TRUE}
+extract_row <- function(x, n) {
+  return(x[n,])
+}
+
+extract_row(cars, 2)
+```
+
+## Exercises: Fibonacci {.build}
+
+Write a function that computes the nth [Fibonacci number](https://en.wikipedia.org/wiki/Fibonacci_number).
+
+<img src="images/fibonacci.png" width = "100%">
+
+This is a classic problem in computer science. It also slightly tricky, and interesting...let's do it together.
+
+## Exercises: Fibonacci
+
+```{r, echo=TRUE}
+fibonacci <- function(n) {
+  if(n < 0) {
+    stop("Error! n has to be positive")
+  } else if(n == 0) {
+    return(0)
+  } else if(n == 1) {
+    return(1)
+  } else {
+    return(fibonacci(n - 1) + fibonacci(n - 2))
+  }
+}
+```
+
+Whoah! A function calling itself. This is called _recursion_.
+
+## Exercises: Fibonacci
+
+```{r, echo=TRUE}
+fibonacci(2)
+fibonacci(3)
+fibonacci(12)
+# try this: fibonacci(-1)
+```
