@@ -1,0 +1,10 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/581300/048f3f0872084230987f784cbdfa8674
+bundleId: https://api.rpubs.com/api/v1/document/581300/048f3f0872084230987f784cbdfa8674
+url: http://rpubs.com/bpbond/581300
+when: 1583924523.15683
