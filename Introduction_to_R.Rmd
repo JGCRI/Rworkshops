@@ -489,3 +489,127 @@ fibonacci(3)
 fibonacci(12)
 # try this: fibonacci(-1)
 ```
+
+## Day 3 goals {data-background=#cceeff} 
+
+- Review
+- RStudio projects
+- Reading data into R
+- The `aggregate` function
+- More plotting
+- Saving graphs and data
+
+## Review and remember... {.build}
+
+- Types of variables and how they behave
+- Functions, both built in and ones we write
+- Scripts - writing, saving, running
+- Program flow: `if...else` and `for`
+- Vectors and data frames - bracket subsetting
+- Missing values: `NA`
+- Packages
+- Visualizing data using `ggplot2`
+
+## RStudio projects
+
+RStudio projects make it straightforward to divide your work into multiple contexts.
+
+RStudio projects are associated with R _working directories_. You can create an RStudio project:
+
+* In a brand new directory
+* In an existing directory where you already have R code and data
+* By cloning a version control (Git or Subversion) repository
+
+Let's create a new project for our work today.
+
+## RStudio projects
+
+The _working directory_ of our project is set to the project folder.
+
+```{r, echo=TRUE}
+getwd()
+list.files()
+```
+
+All reading and writing takes place starting here.
+
+You _can_ set the working directory (see `?setwd`) but I strongly discourage this.
+
+## Reading data into R
+
+Data files come in lots of different formats:
+
+* image files
+* tabular data
+* binary data
+* text
+
+## Reading data into R
+
+<div class="columns-2">
+
+_Tabular data_ are a perfect match for our data frames, and are very common, so let's start with that.
+The most common form of these is CSV (comma separated values).
+
+Download a sample data file:
+
+https://github.com/JGCRI/Rworkshops
+
+Note: I put this file in the _repository_ for these workshops. The original
+file is [here](https://people.sc.fsu.edu/~jburkardt/data/csv/deniro.cs).
+
+<img src="images/de_niro.png" width = "75%">
+</div>
+
+## Reading data into R
+
+What does `deniro.csv` look like? 
+
+```{r}
+cat(readLines("deniro.csv", n = 5), sep = "\n")
+```
+
+We use the `read.csv` function read it into R:
+
+```{r, echo=TRUE}
+deniro <- read.csv("deniro.csv")
+```
+
+Note that read.csv can also read directly from the Internet!
+
+```{r, echo=TRUE}
+deniro <- read.csv("https://people.sc.fsu.edu/~jburkardt/data/csv/deniro.csv")
+```
+
+## Exploring `deniro` {.build}
+
+Use `head`, `tail`, and `summary` to look at the De Niro data.
+
+Use bracket notation to look at which films he made in 1990
+
+```{r, echo=TRUE}
+which_years_are_1990 <- deniro$Year == 1990
+deniro[which_years_are_1990,]
+```
+
+## Exploring `deniro`
+
+Another way to do this is using R's `subset` command.
+
+```{r, echo=TRUE}
+subset(deniro, Year == 1990)
+```
+
+Play around with `subset` a bit. Subset his 'good' and 'bad' films, recent and old ones.
+
+## A script
+
+Let's write a script that
+
+- reads in `deniro`
+- prints a summary of the dataset
+- assigned a good/ok/bad label to each movie
+- plots scores by year, coloring by category
+- saves the plot
+- calculates how movies there are of each category   <-- this is new
+- saves his good films (Rotten Tomatoes score >90)

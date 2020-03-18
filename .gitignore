@@ -41,3 +41,5 @@ vignettes/*.pdf
 .DS_Store
 
 *.html
+*.pdf
+good_deniro_films.csv
