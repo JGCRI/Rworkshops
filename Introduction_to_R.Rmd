@@ -544,6 +544,8 @@ Data files come in lots of different formats:
 * binary data
 * text
 
+Which you use depends on your task, the format the dataset is provided in, and other factors.
+
 ## Reading data into R
 
 <div class="columns-2">
@@ -608,8 +610,66 @@ Let's write a script that
 
 - reads in `deniro`
 - prints a summary of the dataset
-- assigned a good/ok/bad label to each movie
+- assign a good/ok/bad label to each movie
 - plots scores by year, coloring by category
 - saves the plot
 - calculates how movies there are of each category   <-- this is new
 - saves his good films (Rotten Tomatoes score >90)
+
+## Read in `deniro` and summarize {.build}
+
+Hint: use `read.csv` and `summary`
+
+```{r, echo=TRUE}
+deniro <- read.csv("deniro.csv")
+
+print(summary(deniro))
+```
+
+## Assign labels to each movie {.build}
+
+Hint: use a logical vector
+
+```{r, echo=TRUE}
+print(paste("Total movies:", nrow(deniro)))
+goods <- deniro$Score > 80
+print(paste("Good movies:", sum(goods)))
+bads <- deniro$Score < 20
+print(paste("Bad movies:", sum(bads)))
+
+# Assign good/okay/bad categories
+
+deniro$Category <- "Okay"
+deniro$Category[goods] <- "Good"
+deniro$Category[bads] <- "Bad"
+```
+
+## Plot our data! {.build}
+
+We'll use `qplot` in the `ggplot2` package
+
+```{r, echo=TRUE, fig.height=4}
+library(ggplot2)
+print(qplot(Year, Score, color = Category, data = deniro))
+ggsave("deniro.pdf")
+```
+
+## Summarize the data {.build}
+
+This is something we haven't seen before.
+
+```{r, echo=TRUE, fig.height=4}
+howmany <- aggregate(Score ~ Category, data = deniro, FUN = length)
+print(howmany)
+```
+
+## Save the good movies {.build}
+
+Because we need something to watch while in quarantine.
+
+```{r, echo=TRUE, fig.height=4}
+good_movies <- subset(deniro, goods)
+write.csv(good_movies, "good_deniro_films.csv")
+list.files()
+```
+
