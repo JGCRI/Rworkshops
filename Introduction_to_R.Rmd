@@ -673,3 +673,337 @@ write.csv(good_movies, "good_deniro_films.csv")
 list.files()
 ```
 
+## Day 4 goals {data-background=#cceeff} 
+
+- Review
+- Dipping a toe into the tidyverse
+
+## Review and remember... {.build}
+
+**Types of variables, vectors, data frames**
+
+```{r, echo=TRUE}
+x <- 1
+y <- x  # creates a separate copy
+z <- 100:1
+my_df <- data.frame(a = c("a", "b", "c"), b = 1:3)
+length(x)
+length(z)
+```
+
+## Review and remember... {.build}
+
+**Bracket subsetting and `subset`**
+
+```{r, echo=TRUE}
+z[12]
+my_df[1,]
+my_df$a
+```
+
+## Review and remember... {.build}
+
+**Functions and _scope_**
+
+```{r, echo=TRUE}
+times_two <- function(x) {
+  x * 2
+}
+
+x <- 10
+times_two(3)
+```
+
+## Review and remember... {.build}
+
+**Program control flow**
+
+```{r, echo=TRUE}
+if(x > 5) {
+  print("more than 5")
+} else {
+  print("less than or equal to 5")
+}
+```
+
+## Review and remember... {.build}
+
+**Missing values**
+
+```{r, echo=TRUE}
+x <- c(1, 2, NA, 4, 5)
+sum(x)
+sum(x, na.rm = TRUE)
+is.na(x)
+```
+
+## Review and remember... {.build}
+
+**Packages**
+
+```{r, echo=TRUE}
+library(ggplot2)  # loads the ggplot2 package into our active library
+qplot(speed, dist, data = cars)
+```
+
+## Review and remember... {.build}
+
+**Reading data into R**
+
+```{r, echo=TRUE}
+deniro <- read.csv("deniro.csv")
+dim(deniro)
+summary(deniro)
+```
+
+## Review and remember... {.build}
+
+**Aggregating data**
+
+```{r, echo=TRUE}
+by_year <- aggregate(Title ~ Year, data = deniro, FUN = length)
+qplot(Year, Title, data = by_year, geom = "line", ylab = "# of movies")
+```
+
+## The tidyverse
+
+The last slide showed that `aggregate` has problems: you can only compute
+one thing at a time; the resulting columns might not be what you want. Also,
+it can be kind of slow.
+
+This and other problems prompted the development of a related group of R
+packages known as the [tidyverse](https://www.tidyverse.org) that have become
+very popular.
+
+## dplyr
+
+The dplyr package uses verbs (functions) to operate on tibbles (data frames).
+
+```{r, eval=FALSE, echo=TRUE}
+some_data_frame %>% 
+
+  do_something() %>%
+
+  do_something_else() %>% 
+
+  finish up()
+```
+
+This says, "take some data frame, do something; then take the results, and do something
+else; then take THOSE results, and finish up".
+
+## pipes
+
+dplyr uses `%>%`, the _pipe_ operator, which allows us to pipe an object
+forward into a function or call expression. Pipes make it easy to see
+each step of a multi-step process.
+
+**Note** that `x %>% f` is usually equivalent to `f(x)`:
+
+```{r, message=FALSE}
+library(dplyr, quietly = TRUE)
+```
+
+```{r, echo=TRUE}
+cars %>% nrow()
+cars %>% nrow() %>% length()
+```
+
+## Using dplyr: filtering rows
+
+dplyr provides a `filter` function:
+
+```{r, echo=TRUE}
+# You may need to `install.packages("dplyr")` first.
+library(dplyr)
+cars %>%
+  filter(speed < 10)
+```
+
+## Using dplyr: filtering rows
+
+dplyr provides a `filter` function:
+
+```{r, echo=TRUE}
+cars %>%
+  filter(speed < 10, dist > 20)
+```
+
+This selects rows based on particular condition(s).
+
+## Using dplyr: filtering rows
+
+dplyr provides a `filter` function:
+
+```{r, echo=TRUE}
+cars %>%
+  filter(speed < 10 | dist > 20)
+```
+
+This selects rows based on particular condition(s).
+
+## Using dplyr: selecting columns
+
+`dplyr::select` picks out particular columns, dropping the others:
+
+```{r, echo=TRUE}
+cars %>%
+  select(speed)
+```
+
+## Using dplyr: selecting columns
+
+`dplyr::select` picks out particular columns, dropping the others:
+
+```{r, echo=TRUE}
+cars %>%
+  select(dist)
+```
+
+## Using dplyr: selecting columns
+
+`dplyr::select` picks out particular columns, dropping the others:
+
+```{r, echo=TRUE}
+cars %>%
+  select(-dist)
+```
+
+## Using dplyr: sorting data
+
+`dplyr::arrange` sort data:
+
+```{r, echo=TRUE}
+cars %>%
+  arrange(dist)
+```
+
+## Using dplyr: summarizing
+
+Thinking back to the typical data pipeline, we often want to summarize data by groups as an intermediate or final step. For example, for each subgroup we might want to:
+
+* Compute mean, max, min, etc. (n->1)
+* Compute rolling mean and other window functions (n->n)
+* Fit models and extract their parameters, goodness of fit, etc.
+
+For example: what is the average age of JGCRI staff, by sex?
+
+## Using dplyr: summarizing
+
+These are generally known as _split-apply-combine_ problems.
+
+<img src="images/split-apply-combine.png" width = "50%">
+
+From https://github.com/ramnathv/rblocks/issues/8
+
+## Using dplyr: summarizing
+
+`dplyr` verbs become particularly powerful when used in conjunction 
+with groups we define in the dataset. This doesn't change the data but 
+instead groups it, ready for the next operation we perform.
+
+```{r, echo=TRUE}
+cars %>%
+  group_by(speed)
+```
+
+## Using dplyr: summarizing
+
+Once data are _grouped_ we can use `summarise`:
+
+```{r, echo=TRUE}
+cars %>%
+  group_by(speed) %>% 
+  summarise(avg_dist = mean(dist))
+```
+
+## Using dplyr: summarizing
+
+Once data are _grouped_ we can use `summarise`:
+
+```{r, echo=TRUE}
+cars %>%
+  group_by(speed) %>% 
+  summarise(n = n(),
+            avg_dist = mean(dist))
+```
+
+Verbalize: how does _split-apply-combine_ apply here?
+
+## babynames
+
+Install the `babynames` package, and take a look.
+
+```{r, echo=TRUE}
+library(babynames)
+babynames
+```
+
+Explore `babynames` a bit. How many rows, columns does it have? How many unique names?
+
+## babynames
+
+Let's use `dplyr` to calculate the number of babies born each year.
+
+```{r, echo=TRUE}
+babynames %>% 
+  group_by(year) %>% 
+  summarise(babies = sum(n))
+```
+
+## babynames
+
+Let's use `dplyr` to calculate the number of babies born each year.
+
+```{r, echo=TRUE}
+babynames %>% 
+  group_by(year) %>% 
+  summarise(babies = sum(n)) %>% 
+  ggplot(aes(year, babies)) + geom_line()
+```
+
+## babynames
+
+Let's use `dplyr` to calculate the number of babies born each year.
+
+```{r, echo=TRUE}
+babynames %>% 
+  group_by(year, sex) %>% 
+  summarise(babies = sum(n)) %>% 
+  ggplot(aes(year, babies, color = sex)) + geom_line()
+```
+
+## babynames
+
+Exercise.
+
+Filter `babynames` for _your_ name and plot the number of kids born
+by year.
+
+## babynames
+
+```{r, echo=TRUE}
+babynames %>% 
+  filter(name == "Benjamin") %>% 
+  group_by(year, sex) %>% 
+  summarise(babies = sum(n)) %>% 
+  ggplot(aes(year, babies, color = sex)) + geom_line() + ggtitle("Benjamin")
+```
+
+## babynames {.build}
+
+Now plot the `prop` column (proportion of all names) for your name.
+
+```{r, echo=TRUE}
+babynames %>% 
+  filter(name == "Benjamin") %>% 
+  ggplot(aes(year, prop, color = sex)) + geom_line() + ggtitle("Benjamin")
+```
+
+## babynames
+
+We can wrap up by playing a bit more with `dplyr` and `babynames` (no slides, depends on time).
+
+Thanks for attending this introduction to R workshop! I hope it was useful.
+
+These slides are available at https://rpubs.com/bpbond/581300.
