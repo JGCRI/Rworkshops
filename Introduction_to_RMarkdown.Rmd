@@ -88,8 +88,21 @@ What if I want to generate 100 formatted reports for 100 different datasets?
 
 ## Let's dive in
 
+(Create a new document)
+
 
 ## Let's make it pretty
+
+(immediately apply a theme, or something, to wow them)
+
+
+## Chunks versus inline
+
+
+## Graphics
+
+
+## Tables
 
 
 
@@ -98,10 +111,8 @@ What if I want to generate 100 formatted reports for 100 different datasets?
 For reproducibility, it is a good practice to add a call to `sessionInfo()` at the end of your document.
 
 
-## babynames
+## The End
 
-We can wrap up by playing a bit more with `dplyr` and `babynames` (no slides, depends on time).
+Thanks for attending this introduction to RMarkdown documents workshop! I hope it was useful.
 
-Thanks for attending this introduction to R workshop! I hope it was useful.
-
-These slides are available at https://rpubs.com/bpbond/581300.
+These slides are available at https://rpubs.com/bpbond/626346.
