@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Day 1 goals {.build data-background=#cceeff}
 
 Topics will include
+
 >- Concept of reproducible documents
 >- RMarkdown (and Markdown)
 >- Simple examples
@@ -21,14 +22,80 @@ Topics will include
 >- Output formats
 >- Graphics
 >- Simple tables
+>- Sesssion info
 >- A more complicated example
 
 
 ## Assumptions
 
+* You're familiar with the basic mechanics of R
+* You have R and RStudio installed
+* You have the [rmarkdown](https://cran.r-project.org/web/packages/rmarkdown/index.html) package installed
 
-## Reproducible science and documents
+This presentation was made using RMarkdown version `r packageVersion("rmarkdown")` running under `r R.version.string`.
 
+
+
+## Reproducible documents
+
+_What_ are reproducible documents?
+
+>A reproducible document is one where any code used by the original researcher to compute an output (a graph, equation, table or statistical result) is embedded within the narrative describing the work
+
+From the [eLife Reproducible Document Stack](https://elifesciences.org/labs/7dbeb390/reproducible-document-stack-supporting-the-next-generation-research-article#:~:text=A%20reproducible%20document%20is%20one,the%20narrative%20describing%20the%20work.)
+
+
+## Reproducible documents
+
+<div style="float: left; width: 50%;">
+_Why_ do we want to use reproducible documents?
+
+* Transparency
+* Reproducibility
+* **THEY SAVE US TIME AND WORK**
+</div>
+
+<div style="float: right; width: 50%;">
+<img src="images-rmarkdown/automation.png" width = "95%">
+
+[xkcd](https://xkcd.com/1319/)
+</div>
+
+
+## Reproducible documents
+
+Here we are in Word:
+
+<img src="images-rmarkdown/word_screenshot.png" width = "100%">
+
+We have no idea where these numbers came from.
+
+
+## Reproducible documents
+
+What if I want to generate 100 formatted reports for 100 different datasets?
+
+<img src="images-rmarkdown/dataset_reports.png" width = "100%">
+
+
+## Reproducible documents
+
+<iframe width="922" height="519" src="https://www.youtube.com/embed/PCRoc0JxRWg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+## RMarkdown
+
+
+## Let's dive in
+
+
+## Let's make it pretty
+
+
+
+## Session info
+
+For reproducibility, it is a good practice to add a call to `sessionInfo()` at the end of your document.
 
 
 ## babynames
