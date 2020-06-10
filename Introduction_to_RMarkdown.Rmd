@@ -1,0 +1,40 @@
+---
+title: "Introduction to RMarkdown"
+author: "BBL"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: ioslides_presentation
+logo: images/Rlogo.png
+incremental: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Day 1 goals {.build data-background=#cceeff}
+
+Topics will include
+>- Concept of reproducible documents
+>- RMarkdown (and Markdown)
+>- Simple examples
+>- Making your own: code chunks and inline code
+>- Output formats
+>- Graphics
+>- Simple tables
+>- A more complicated example
+
+
+## Assumptions
+
+
+## Reproducible science and documents
+
+
+
+## babynames
+
+We can wrap up by playing a bit more with `dplyr` and `babynames` (no slides, depends on time).
+
+Thanks for attending this introduction to R workshop! I hope it was useful.
+
+These slides are available at https://rpubs.com/bpbond/581300.
