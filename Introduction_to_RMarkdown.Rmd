@@ -2,7 +2,9 @@
 title: "Introduction to R Markdown"
 author: "BBL"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: ioslides_presentation
+output: 
+  ioslides_presentation:
+      code_folding: "hide"
 logo: images/Rlogo.png
 incremental: true
 ---
@@ -31,8 +33,6 @@ Topics will include
 * You're familiar with the basic mechanics of R
 * You have R and RStudio installed
 * You have the [rmarkdown](https://cran.r-project.org/web/packages/rmarkdown/index.html) package installed
-
-This presentation was made using R Markdown version `r packageVersion("rmarkdown")` running under `r R.version.string`.
 
 
 ## Reproducible documents {data-background=#cceeff}
@@ -125,7 +125,22 @@ What happened?
 (TODO: immediately apply a theme, or something, to wow them?)
 
 
-## Inline code
+## Text: Markdown
+
+```
+# A big header
+## A smaller one
+### Smaller still
+A [link](https://daringfireball.net/projects/markdown/).
+A sentence with _italics_ in it.
+```
+
+A [link](https://daringfireball.net/projects/markdown/). A sentence with _italics_ in it.
+
+<img src="images-rmarkdown/markdown-quickref.png" width = "50%">
+
+
+## Code: inline
 
 TODO: go over differences.
 
@@ -135,44 +150,82 @@ Two plus two equals `r 2+2`.
 2+2
 ```
 
-
-## Chunks
-
 TODO: have them insert an inline statement or two.
 
 
-## Chunks
+## Code: chunks
 
 TODO: have them insert a new chunk.
 
 
 ## Chunk options
 
+TODO
+
 
 ## Graphics
+
+TODO
 
 
 ## Tables
 
+TODO
+
 
 ## Themes, etc.
 
-There's lots you can do here if you're want to get fancy... TODO
+There's lots you can do here if you want to get fancy... TODO
+
+
+## Output formats
+
+TODO
+
+
+## Fancier things to whet your appetite
+
+```{r, message=FALSE}
+library(ggplot2)
+library(plotly)
+library(gapminder)
+ 
+p <- gapminder %>%
+  filter(year == 1977) %>%
+  ggplot( aes(gdpPercap, lifeExp, size = pop, color=continent)) +
+  geom_point() +
+  scale_x_log10() +
+  theme_bw() +
+  ggtitle("gapminder 1977")
+ 
+ggplotly(p)
+```
+
+
+## Fancier things to whet your appetite
+
+```{r, message=FALSE}
+library(DT)
+datatable(gapminder, rownames = FALSE, filter = "top", options = list(pageLength = 5, scrollX = TRUE))
+```
+
+Based on [this example](https://holtzy.github.io/Pimp-my-rmd/#use_dt_for_tables).
 
 
 ## Session info
 
-For reproducibility, it is a good practice to add a call to `sessionInfo()` at the end of your document. Like this:
+For reproducibility, it is a good practice to call `sessionInfo()` at the end of your document. Like this:
 
 ```{r, echo=TRUE}
 sessionInfo()
 ```
 
 
-
 ## The End {data-background=#cceeff}
 
 Thanks for attending this introduction to R Markdown documents workshop! We hope it was useful.
+
+This presentation was made using R Markdown version `r packageVersion("rmarkdown")` running under `r R.version.string`.
 
 These slides are available at https://rpubs.com/bpbond/626346. (And they were written in R Markdown! The code is [here](https://github.com/JGCRI/Rworkshops/blob/master/Introduction_to_RMarkdown.Rmd).)
 
