@@ -1,5 +1,5 @@
 ---
-title: "Introduction to RMarkdown"
+title: "Introduction to R Markdown"
 author: "BBL"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: ioslides_presentation
@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = FALSE)
 Topics will include
 
 >- Concept of reproducible documents
->- RMarkdown (and Markdown)
+>- R Markdown (and Markdown)
 >- Simple examples
 >- Making your own: code chunks and inline code
 >- Output formats
@@ -32,17 +32,16 @@ Topics will include
 * You have R and RStudio installed
 * You have the [rmarkdown](https://cran.r-project.org/web/packages/rmarkdown/index.html) package installed
 
-This presentation was made using RMarkdown version `r packageVersion("rmarkdown")` running under `r R.version.string`.
+This presentation was made using R Markdown version `r packageVersion("rmarkdown")` running under `r R.version.string`.
 
 
-
-## Reproducible documents
+## Reproducible documents {data-background=#cceeff}
 
 _What_ are reproducible documents?
 
 >A reproducible document is one where any code used by the original researcher to compute an output (a graph, equation, table or statistical result) is embedded within the narrative describing the work
 
-From the [eLife Reproducible Document Stack](https://elifesciences.org/labs/7dbeb390/reproducible-document-stack-supporting-the-next-generation-research-article#:~:text=A%20reproducible%20document%20is%20one,the%20narrative%20describing%20the%20work.)
+From the [eLife Reproducible Document Stack](https://elifesciences.org/labs/7dbeb390/reproducible-document-stack-supporting-the-next-generation-research-article)
 
 
 ## Reproducible documents
@@ -83,20 +82,71 @@ What if I want to generate 100 formatted reports for 100 different datasets?
 <iframe width="922" height="519" src="https://www.youtube.com/embed/PCRoc0JxRWg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
-## RMarkdown
+## R Markdown {data-background=#cceeff}
+
+R Markdown is an easy-to-write plain text format for creating dynamic documents and reports.
+
+It's designed to let us mix _text_ and _code_ to produce a [Markdown](https://en.wikipedia.org/wiki/Markdown) document, that then is transformed into a final document.
+
+
+## R Markdown: under the hood
+
+<img src="images-rmarkdown/workflow.png" width = "100%">
+
+[The R Markdown Cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/rmarkdown-process.html)
 
 
 ## Let's dive in
 
-(Create a new document)
+<img src="images-rmarkdown/create-img1.png" width = "100%">
+
+
+## Let's dive in
+
+<img src="images-rmarkdown/create-img2.png" width = "100%">
+
+
+## Let's dive in
+
+What do we have? A _text document_ (the R Markdown file).
+
+<img src="images-rmarkdown/knit.png" width = "100%">
+
+
+## Let's dive in
+
+What happened?
+
+<img src="images-rmarkdown/knitted.png" width = "100%">
 
 
 ## Let's make it pretty
 
-(immediately apply a theme, or something, to wow them)
+(TODO: immediately apply a theme, or something, to wow them?)
 
 
-## Chunks versus inline
+## Inline code
+
+TODO: go over differences.
+
+Two plus two equals `r 2+2`.
+
+```{r addition}
+2+2
+```
+
+
+## Chunks
+
+TODO: have them insert an inline statement or two.
+
+
+## Chunks
+
+TODO: have them insert a new chunk.
+
+
+## Chunk options
 
 
 ## Graphics
@@ -105,14 +155,25 @@ What if I want to generate 100 formatted reports for 100 different datasets?
 ## Tables
 
 
+## Themes, etc.
+
+There's lots you can do here if you're want to get fancy... TODO
+
 
 ## Session info
 
-For reproducibility, it is a good practice to add a call to `sessionInfo()` at the end of your document.
+For reproducibility, it is a good practice to add a call to `sessionInfo()` at the end of your document. Like this:
+
+```{r, echo=TRUE}
+sessionInfo()
+```
 
 
-## The End
 
-Thanks for attending this introduction to RMarkdown documents workshop! I hope it was useful.
+## The End {data-background=#cceeff}
 
-These slides are available at https://rpubs.com/bpbond/626346.
+Thanks for attending this introduction to R Markdown documents workshop! We hope it was useful.
+
+These slides are available at https://rpubs.com/bpbond/626346. (And they were written in R Markdown! The code is [here](https://github.com/JGCRI/Rworkshops/blob/master/Introduction_to_RMarkdown.Rmd).)
+
+An invaluable resource: the [R Markdown Cheat Sheet](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf).
