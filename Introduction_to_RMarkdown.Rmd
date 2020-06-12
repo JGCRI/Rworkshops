@@ -11,6 +11,10 @@ incremental: true
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+
+library(dplyr)
+library(ggplot2)
+theme_set(theme_bw())
 ```
 
 ## Day 1 goals {.build data-background=#cceeff}
@@ -67,7 +71,7 @@ Here we are in Word:
 
 <img src="images-rmarkdown/word_screenshot.png" width = "100%">
 
-We have no idea where these numbers came from.
+We have _no idea_ where these numbers came from.
 
 
 ## Reproducible documents
@@ -163,14 +167,53 @@ TODO: have them insert a new chunk.
 TODO
 
 
+## Chunk options
+
+Running individual chunks in the editor.
+
+
 ## Graphics
 
-TODO
+```{r gapminder-chunk, echo=TRUE, eval=FALSE}
+library(gapminder)
+
+p <- gapminder %>%
+  filter(year == 1977) %>%
+  ggplot( aes(gdpPercap, lifeExp, size = pop, color = continent)) +
+  geom_point() +
+  scale_x_log10() +
+  ggtitle("gapminder 1977")
+
+print(p)
+```
+
+
+## Graphics
+
+```{r gapminder-graph, echo=FALSE}
+library(gapminder)
+
+p <- gapminder %>%
+  filter(year == 1977) %>%
+  ggplot(aes(gdpPercap, lifeExp, size = pop, color = continent)) +
+  geom_point() +
+  scale_x_log10()
+
+print(p)
+```
+
+
+## Graphics
+
+Let's add a graph to your document.
 
 
 ## Tables
 
 TODO
+
+hand-made tables
+programmatic tables
 
 
 ## Themes, etc.
@@ -183,16 +226,23 @@ There's lots you can do here if you want to get fancy... TODO
 TODO
 
 
+## Session info
+
+For reproducibility, it is a good practice to call `sessionInfo()` at the end of your document. Like this:
+
+```{r, echo=TRUE}
+sessionInfo()
+```
+
+
 ## Fancier things to whet your appetite
 
 ```{r, message=FALSE}
-library(ggplot2)
 library(plotly)
-library(gapminder)
- 
+
 p <- gapminder %>%
   filter(year == 1977) %>%
-  ggplot( aes(gdpPercap, lifeExp, size = pop, color=continent)) +
+  ggplot(aes(gdpPercap, lifeExp, size = pop, color = continent)) +
   geom_point() +
   scale_x_log10() +
   theme_bw() +
@@ -206,18 +256,23 @@ ggplotly(p)
 
 ```{r, message=FALSE}
 library(DT)
-datatable(gapminder, rownames = FALSE, filter = "top", options = list(pageLength = 5, scrollX = TRUE))
+datatable(gapminder, rownames = FALSE, filter = "top", options = list(pageLength = 5, scrollX = TRUE)) %>% 
+  formatStyle(columns = 1:6, fontSize = "50%")
 ```
 
-Based on [this example](https://holtzy.github.io/Pimp-my-rmd/#use_dt_for_tables).
+\
+This takes _one line_ of code in RMarkdown. Example based on [this post](https://holtzy.github.io/Pimp-my-rmd/#use_dt_for_tables).
 
 
-## Session info
+## Fancier things to whet your appetite
 
-For reproducibility, it is a good practice to call `sessionInfo()` at the end of your document. Like this:
-
-```{r, echo=TRUE}
-sessionInfo()
+```{r out.width='100%', echo=FALSE}
+library(leaflet)
+leaflet() %>% 
+  addTiles() %>%
+  setView(-76.9219, 38.9709, zoom = 17) %>%
+  addPopups(-76.9219, 38.9709,
+            "Here is the <b>Joint Global Change Research Institute</b>")
 ```
 
 
