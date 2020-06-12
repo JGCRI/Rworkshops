@@ -203,6 +203,11 @@ print(p)
 ```
 
 
+## Graphics (behind the scenes)
+
+<img src="images-rmarkdown/gapminder-code.png" width = "100%">
+
+
 ## Graphics
 
 Let's add a graph to your document.
