@@ -124,11 +124,6 @@ What happened?
 <img src="images-rmarkdown/knitted.png" width = "100%">
 
 
-## Let's make it pretty
-
-(TODO: immediately apply a theme, or something, to wow them?)
-
-
 ## Text: Markdown
 
 ```
@@ -141,35 +136,78 @@ A sentence with _italics_ in it.
 
 A [link](https://daringfireball.net/projects/markdown/). A sentence with _italics_ in it.
 
+<img src="images-rmarkdown/third_way.png" width = "50%">
+
+https://xkcd.com/1285/
+
+
+## Text: Markdown
+
 <img src="images-rmarkdown/markdown-quickref.png" width = "50%">
 
 
 ## Code: inline
 
-TODO: go over differences.
+R code in Markdown documents can be _inline_ or in _code chunks_.
 
-Two plus two equals `r 2+2`.
+Inline code uses backticks, inside of which is an R expression that starts with "r". It is typically used for something short:
 
-```{r addition}
-2+2
-```
+* These slides were made with `` `r "\u0060r R.version.string\u0060"` ``.
 
-TODO: have them insert an inline statement or two.
+* These slides were made with `r R.version.string`.
+
+* Two plus two equals `` `r "\u0060r 2+2\u0060"` ``.
+
+* Two plus two equals `r 2+2`.
 
 
 ## Code: chunks
 
-TODO: have them insert a new chunk.
+The other mechanism to include R code in your document is via code chunks. These are evaluated by `knitr` and the results inserted into your document.
+
+Let's try this!
+
+**Two important notes:**
+
+* You can give chunks individual names, which makes it easier to navigate around longer documents.
+* RStudio has nice controls for running individual chunks.
+
+
+## Code: chunks
+
+Code chunks don't have to be in R!
+
+<img src="images-rmarkdown/chunk-langs.png" width = "15%">
+
+```{bash bash-no-eval, echo=TRUE, eval=FALSE}
+ls *.Rmd
+```
+
+```{bash bash}
+ls *.Rmd
+```
 
 
 ## Chunk options
 
-TODO
+We can control the behavior of code chunks by using _chunk options_ (settings). Some common ones include:
+
+Option  | Default  | Effect
+------- | -------- | --------
+eval    | TRUE     | Whether to evaluate the code and include its results
+echo    | TRUE     | Whether to display code along with its results
+message | TRUE     | Whether to display messages
+results | "markup" | "markup", "asis", "hold", or "hide"
+cache   |  FALSE   | Whether to cache results for future renders
 
 
 ## Chunk options
 
-Running individual chunks in the editor.
+Try inserting a new chunk with the code `dim(iris)`. 
+
+What happens if you set `eval=FALSE`? What about `echo=FALSE`? 
+
+Why?
 
 
 ## Graphics
@@ -179,7 +217,7 @@ library(gapminder)
 
 p <- gapminder %>%
   filter(year == 1977) %>%
-  ggplot( aes(gdpPercap, lifeExp, size = pop, color = continent)) +
+  ggplot(aes(gdpPercap, lifeExp, size = pop, color = continent)) +
   geom_point() +
   scale_x_log10() +
   ggtitle("gapminder 1977")
@@ -212,23 +250,25 @@ print(p)
 
 Let's add a graph to your document.
 
+Note there are chunk options `fig.width` and `fig.height` you can change.
+
 
 ## Tables
 
-TODO
+Tables can be made by hand (see the Markdown help page), but usually we have a data frame that we want to display. 
 
-hand-made tables
-programmatic tables
+The simplest method uses `knitr`'s built-in `kable()` function:
 
-
-## Themes, etc.
-
-There's lots you can do here if you want to get fancy... TODO
+```{r simple-table}
+knitr::kable(iris)
+```
 
 
 ## Output formats
 
-TODO
+We haven't really talked about [pandoc](https://pandoc.org/), the software that transforms Markdown into an output format of our choice.
+
+Use the `output:` line in the YAML header to change the output format to e.g. `word_document" or "pdf_document". (These may require extra software to be installed.)
 
 
 ## Session info
@@ -238,6 +278,13 @@ For reproducibility, it is a good practice to call `sessionInfo()` at the end of
 ```{r, echo=TRUE}
 sessionInfo()
 ```
+
+
+## Fancier things to whet your appetite {data-background=#cceeff}
+
+This has been the tip of the iceberg.
+
+<img src="images-rmarkdown/iceberg.jpg" width = "100%">
 
 
 ## Fancier things to whet your appetite
@@ -281,6 +328,31 @@ leaflet() %>%
 ```
 
 
+## Fancier things to whet your appetite
+
+```
+In a subsequent paper [@Bond-Lamberty2009-py], we used the same model 
+outputs to examine the _hydrological_ implications of these wildfire 
+regime shifts [@Nolan2014-us].
+```
+ In a subsequent paper (Bond-Lamberty et al. 2009), we used the same model outputs to examine the _hydrological_ implications of these wildfire regime shifts (Nolan et al. 2014).
+
+**References**
+
+Bond-Lamberty, Ben, Scott D Peckham, Stith T Gower, and Brent E Ewers. 2009. “Effects of Fire on Regional Evapotranspiration in the Central Canadian Boreal Forest.” Glob. Chang. Biol. 15 (5): 1242–54.
+
+Nolan, Rachael H, Patrick N J Lane, Richard G Benyon, Ross A Bradstock, and Patrick J Mitchell. 2014. “Changes in Evapotranspiration Following Wildfire in Resprouting Eucalypt Forests.” Ecohydrol. 6 (January). Wiley Online Library.
+
+
+## Resources
+
+Good resources:
+
+* The [R Markdown Cheat Sheet](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)
+* The [R Markdown Cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/)
+* TODO
+
+
 ## The End {data-background=#cceeff}
 
 Thanks for attending this introduction to R Markdown documents workshop! We hope it was useful.
@@ -289,4 +361,3 @@ This presentation was made using R Markdown version `r packageVersion("rmarkdown
 
 These slides are available at https://rpubs.com/bpbond/626346. (And they were written in R Markdown! The code is [here](https://github.com/JGCRI/Rworkshops/blob/master/Introduction_to_RMarkdown.Rmd).)
 
-An invaluable resource: the [R Markdown Cheat Sheet](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf).
