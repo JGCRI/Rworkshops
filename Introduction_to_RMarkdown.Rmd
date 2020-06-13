@@ -371,6 +371,7 @@ Good resources:
 * The [R Markdown Cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/)
 * [15 Tips on Making Better Use of R Markdown](https://slides.yihui.org/2019-dahshu-rmarkdown#1)
 * [Stack Overflow](https://stackoverflow.com/questions/tagged/r-markdown) of course
+* Allison Hill's [How I Teach R Markdown](https://alison.rbind.io/post/2020-05-28-how-i-teach-r-markdown/)
 
 
 ## The End {data-background=#cceeff}
