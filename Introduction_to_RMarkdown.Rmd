@@ -209,6 +209,8 @@ What happens if you set `eval=FALSE`? What about `echo=FALSE`?
 
 Why?
 
+<img src="images-rmarkdown/chunk-options.png" width = "100%">
+
 
 ## Graphics
 
