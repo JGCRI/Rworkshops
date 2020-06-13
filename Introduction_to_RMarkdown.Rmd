@@ -1,11 +1,11 @@
 ---
-title: "Introduction to R Markdown"
-author: "BBL"
+title: "A Hands-On Introduction to R Markdown"
+author: "Ben B-L"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
   ioslides_presentation:
       code_folding: "hide"
-logo: images/Rlogo.png
+logo: images-rmarkdown/rmarkdown.png
 incremental: true
 ---
 
@@ -17,25 +17,27 @@ library(ggplot2)
 theme_set(theme_bw())
 ```
 
-## Day 1 goals {.build data-background=#cceeff}
+## Goals {data-background=#cceeff}
 
 Topics will include
 
->- Concept of reproducible documents
->- R Markdown (and Markdown)
->- Simple examples
->- Making your own: code chunks and inline code
->- Output formats
->- Graphics
->- Simple tables
->- Sesssion info
->- A more complicated example
+* Concept of reproducible documents
+* R Markdown (and Markdown)
+* Make our own reproducible document
+* Running code _ineline_ and via _code chunks_
+* Graphics and tables
+* Output formats
+* Fancier things
+* Resources
 
 
 ## Assumptions
 
 * You're familiar with the basic mechanics of R
-* You have R and RStudio installed
+
+This is intended to be a hands-on workshop, so also:
+
+* You have R (and probably RStudio) installed
 * You have the [rmarkdown](https://cran.r-project.org/web/packages/rmarkdown/index.html) package installed
 
 
@@ -50,23 +52,6 @@ From the [eLife Reproducible Document Stack](https://elifesciences.org/labs/7dbe
 
 ## Reproducible documents
 
-<div style="float: left; width: 50%;">
-_Why_ do we want to use reproducible documents?
-
-* Transparency
-* Reproducibility
-* **THEY SAVE US TIME AND WORK**
-</div>
-
-<div style="float: right; width: 50%;">
-<img src="images-rmarkdown/automation.png" width = "95%">
-
-[xkcd](https://xkcd.com/1319/)
-</div>
-
-
-## Reproducible documents
-
 Here we are in Word:
 
 <img src="images-rmarkdown/word_screenshot.png" width = "100%">
@@ -76,9 +61,35 @@ We have _no idea_ where these numbers came from.
 
 ## Reproducible documents
 
+Copy-and-paste into word processing documents _sucks_, and it's easy to make mistakes (not update numbers, copy the wrong number, etc).
+
+<img src="images-rmarkdown/copypaste.jpg" style="float:right" width = "50%">
+
+
+
+## Reproducible documents
+
 What if I want to generate 100 formatted reports for 100 different datasets?
 
 <img src="images-rmarkdown/dataset_reports.png" width = "100%">
+
+
+## Reproducible documents
+
+<div style="float: left; width: 50%;">
+_Why_ do we want to use reproducible documents?
+
+* Transparency
+* Reproducibility
+* Reduce mistakes
+* **SAVE TIME AND WORK**
+</div>
+
+<div style="float: right; width: 50%;">
+<img src="images-rmarkdown/automation.png" width = "95%">
+
+[xkcd](https://xkcd.com/1319/)
+</div>
 
 
 ## Reproducible documents
@@ -160,6 +171,8 @@ Inline code uses backticks, inside of which is an R expression that starts with 
 
 * Two plus two equals `r 2+2`.
 
+You can also easily insert equations like $\sum_{n=1}^{10} n^2$
+
 
 ## Code: chunks
 
@@ -198,7 +211,7 @@ eval    | TRUE     | Whether to evaluate the code and include its results
 echo    | TRUE     | Whether to display code along with its results
 message | TRUE     | Whether to display messages
 results | "markup" | "markup", "asis", "hold", or "hide"
-cache   |  FALSE   | Whether to cache results for future renders
+cache   | FALSE    | Whether to cache results for future renders
 
 
 ## Chunk options
@@ -270,14 +283,18 @@ knitr::kable(iris)
 
 We haven't really talked about [pandoc](https://pandoc.org/), the software that transforms Markdown into an output format of our choice.
 
-Use the `output:` line in the YAML header to change the output format to e.g. `word_document" or "pdf_document". (These may require extra software to be installed.)
+<img src="images-rmarkdown/knit-options.png" width = "25%">
+
+Use the Knit menu button, or the `output:` line in the YAML header, to change the output format to e.g. `word_document" or "pdf_document".
+
+These may require extra software to be installed.
 
 
 ## Session info
 
 For reproducibility, it is a good practice to call `sessionInfo()` at the end of your document. Like this:
 
-```{r, echo=TRUE}
+```{r sessioninfo, echo=TRUE}
 sessionInfo()
 ```
 
@@ -291,7 +308,7 @@ This has been the tip of the iceberg.
 
 ## Fancier things to whet your appetite
 
-```{r, message=FALSE}
+```{r plotly, message=FALSE}
 library(plotly)
 
 p <- gapminder %>%
@@ -308,7 +325,7 @@ ggplotly(p)
 
 ## Fancier things to whet your appetite
 
-```{r, message=FALSE}
+```{r DT, message=FALSE}
 library(DT)
 datatable(gapminder, rownames = FALSE, filter = "top", options = list(pageLength = 5, scrollX = TRUE)) %>% 
   formatStyle(columns = 1:6, fontSize = "50%")
@@ -320,7 +337,7 @@ This takes _one line_ of code in RMarkdown. Example based on [this post](https:/
 
 ## Fancier things to whet your appetite
 
-```{r out.width='100%', echo=FALSE}
+```{r leaflet, out.width='100%', echo=FALSE}
 library(leaflet)
 leaflet() %>% 
   addTiles() %>%
@@ -352,7 +369,8 @@ Good resources:
 
 * The [R Markdown Cheat Sheet](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)
 * The [R Markdown Cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/)
-* TODO
+* [15 Tips on Making Better Use of R Markdown](https://slides.yihui.org/2019-dahshu-rmarkdown#1)
+* [Stack Overflow](https://stackoverflow.com/questions/tagged/r-markdown) of course
 
 
 ## The End {data-background=#cceeff}
