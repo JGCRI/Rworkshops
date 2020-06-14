@@ -17,18 +17,17 @@ library(ggplot2)
 theme_set(theme_bw())
 ```
 
-## Goals {data-background=#cceeff}
-
-Topics will include
+## Topics {data-background=#cceeff}
 
 * Concept of reproducible documents
 * R Markdown (and Markdown)
-* Make our own reproducible document
 * Running code _ineline_ and via _code chunks_
 * Graphics and tables
 * Output formats
 * Fancier things
 * Resources
+
+**Goal: to be comfortable making basic reproducible documents.**
 
 
 ## Assumptions
@@ -45,7 +44,7 @@ This is intended to be a hands-on workshop, so also:
 
 _What_ are reproducible documents?
 
->A reproducible document is one where any code used by the original researcher to compute an output (a graph, equation, table or statistical result) is embedded within the narrative describing the work
+"A reproducible document is one where any code used by the original researcher to compute an output (a graph, equation, table or statistical result) is embedded within the narrative describing the work."
 
 From the [eLife Reproducible Document Stack](https://elifesciences.org/labs/7dbeb390/reproducible-document-stack-supporting-the-next-generation-research-article)
 
@@ -101,7 +100,7 @@ _Why_ do we want to use reproducible documents?
 
 R Markdown is an easy-to-write plain text format for creating dynamic documents and reports.
 
-It's designed to let us mix _text_ and _code_ to produce a [Markdown](https://en.wikipedia.org/wiki/Markdown) document, that then is transformed into a final document.
+It's designed to let us mix _text_ and _code_ to produce a [Markdown](https://en.wikipedia.org/wiki/Markdown) document, that is then transformed into a final output
 
 
 ## R Markdown: under the hood
@@ -142,10 +141,10 @@ What happened?
 ## A smaller one
 ### Smaller still
 A [link](https://daringfireball.net/projects/markdown/).
-A sentence with _italics_ in it.
+A sentence with _italics_ in it. **Boldface.**
 ```
 
-A [link](https://daringfireball.net/projects/markdown/). A sentence with _italics_ in it.
+A [link](https://daringfireball.net/projects/markdown/). A sentence with _italics_ in it. **Boldface.**
 
 <img src="images-rmarkdown/third_way.png" width = "50%">
 
@@ -188,7 +187,7 @@ Let's try this!
 
 ## Code: chunks
 
-Code chunks don't have to be in R!
+Side note: code chunks don't have to be in R!
 
 <img src="images-rmarkdown/chunk-langs.png" width = "15%">
 
@@ -207,11 +206,11 @@ We can control the behavior of code chunks by using _chunk options_ (settings). 
 
 Option  | Default  | Effect
 ------- | -------- | --------
-eval    | TRUE     | Whether to evaluate the code and include its results
-echo    | TRUE     | Whether to display code along with its results
-message | TRUE     | Whether to display messages
-results | "markup" | "markup", "asis", "hold", or "hide"
-cache   | FALSE    | Whether to cache results for future renders
+eval    | TRUE     | Whether to evaluate the chunk's code
+echo    | TRUE     | Whether to display chunk's code
+include | TRUE     | Whether to include chunk output
+message | TRUE     | Whether to display chunk messages
+cache   | FALSE    | Whether to cache results
 
 
 ## Chunk options
@@ -226,6 +225,8 @@ Why?
 
 
 ## Graphics
+
+Say we have a figure we want to include:
 
 ```{r gapminder-chunk, echo=TRUE, eval=FALSE}
 library(gapminder)
@@ -265,7 +266,7 @@ print(p)
 
 Let's add a graph to your document.
 
-Note there are chunk options `fig.width` and `fig.height` you can change.
+Note there are chunk options `fig.cap`, `fig.width`, and `fig.height` you can change.
 
 
 ## Tables
@@ -306,7 +307,7 @@ This has been the tip of the iceberg.
 <img src="images-rmarkdown/iceberg.jpg" width = "100%">
 
 
-## Fancier things to whet your appetite
+## Fancier things: interactive graphs
 
 ```{r plotly, message=FALSE}
 library(plotly)
@@ -323,19 +324,20 @@ ggplotly(p)
 ```
 
 
-## Fancier things to whet your appetite
+## Fancier things: interactive tables
 
 ```{r DT, message=FALSE}
 library(DT)
-datatable(gapminder, rownames = FALSE, filter = "top", options = list(pageLength = 5, scrollX = TRUE)) %>% 
+datatable(gapminder, rownames = FALSE, filter = "top", 
+          options = list(pageLength = 5, scrollX = TRUE)) %>% 
   formatStyle(columns = 1:6, fontSize = "50%")
 ```
 
 \
-This takes _one line_ of code in RMarkdown. Example based on [this post](https://holtzy.github.io/Pimp-my-rmd/#use_dt_for_tables).
+This takes _~~one~~ two_ lines of code in RMarkdown. Example based on [this post](https://holtzy.github.io/Pimp-my-rmd/#use_dt_for_tables).
 
 
-## Fancier things to whet your appetite
+## Fancier things: interactive maps
 
 ```{r leaflet, out.width='100%', echo=FALSE}
 library(leaflet)
@@ -347,7 +349,7 @@ leaflet() %>%
 ```
 
 
-## Fancier things to whet your appetite
+## Fancier things: citation management
 
 ```
 In a subsequent paper [@Bond-Lamberty2009-py], we used the same model 
