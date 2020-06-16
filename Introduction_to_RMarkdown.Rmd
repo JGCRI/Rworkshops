@@ -374,6 +374,7 @@ Good resources:
 * [15 Tips on Making Better Use of R Markdown](https://slides.yihui.org/2019-dahshu-rmarkdown#1)
 * [Stack Overflow](https://stackoverflow.com/questions/tagged/r-markdown) of course
 * Allison Hill's [How I Teach R Markdown](https://alison.rbind.io/post/2020-05-28-how-i-teach-r-markdown/)
+* [How to Make Beautiful Tables in R](https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/)
 
 
 ## The End {data-background=#cceeff}
