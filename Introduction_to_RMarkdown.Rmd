@@ -21,7 +21,7 @@ theme_set(theme_bw())
 
 * Concept of reproducible documents
 * R Markdown (and Markdown)
-* Running code _ineline_ and via _code chunks_
+* Running code _inline_ and via _code chunks_
 * Graphics and tables
 * Output formats
 * Fancier things
