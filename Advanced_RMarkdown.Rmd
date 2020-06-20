@@ -19,28 +19,11 @@ theme_set(theme_bw())
 
 ## Topics and goals
 
-* Under the hood: YAML, R, Markdown, knitr, pandoc
-* R
-    + Programmatic reports
-* HTML and other goodies
-    + Floating TOC
-    + Tabsets
-    + Cascading Style Sheets (CSS)
-    + Data frames as tables
-    + Inline equations
-* Other packages
-* Interactive figures and maps
-  + Plotly
-  + Leaflet
-* Tables
-  + DT
-* Pandoc
-  + Citations
-* Bookdown
+<------- Topics are to the left
 
 **Goal: exposure to a variety of more advanced R Markdown techniques and tricks.**
 
-This is NOT intended to be a comprehensive survey of the possibilities with R Markdown.
+Note that this is NOT intended to be a comprehensive survey of the possibilities with R Markdown.
 
 
 ## Under the hood {.tabset}
@@ -162,6 +145,15 @@ _Extremely_ usefully, the RStudio editor provides has an equation preview featur
 
 <img src="images-rmarkdown/editor-eq-preview.png" width = "75%">
 
+### Static image files
+
+These are inserted with a bit of HTML, e.g. for the image above:
+
+`<img src="images-rmarkdown/editor-eq-preview.png" width = "75%">`
+
+There are lots of options that can be applied here, including size, whether the image floats, its justification, etc.
+
+
 ### Themes {.tabset}
 
 This quickly gets confusing (to me anyway).
@@ -191,6 +183,50 @@ There's also the [prettydoc](https://prettydoc.statr.me/) package.
 #### Custom CSS
 
 You can use a custom [Cascading Style Sheet (CSS)](https://en.wikipedia.org/wiki/Cascading_Style_Sheets) file. You're on your own here :)
+
+[![](images-rmarkdown/black-hole.jpg)](https://en.wikipedia.org/wiki/Black_hole)
+
+
+## knitr tricks
+
+<img src="images-rmarkdown/grandma.jpg" width = "25%" style="float: right;">
+
+### combine_words
+
+The first 10 letters are `` `r "\u0060r knitr::combine_words(LETTERS[1:10])\u0060"` ``.
+
+The first 10 letters are `r knitr::combine_words(LETTERS[1:10])`.
+
+### Child documents
+
+R Markdown documents may be split, with a primary document incorporating others via a [child document](https://bookdown.org/yihui/rmarkdown-cookbook/child-document.html) mechanism. 
+
+### Caching
+
+Don't forget about the `cache=TRUE` chunk option. Critical for keeping the build time of longer, complex documents under control.
+
+[![](images-rmarkdown/two-hard-things.png)](https://twitter.com/codinghorror/status/506010907021828096?s=20)
+
+### Chunk defaults
+
+Most R Markdown documents (including this one) have a first chunk that, among other things, sets the _default chunk options_:
+
+```
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+### Line breaks
+
+_Two trailing spaces_ are used to force a line break:
+
+This line **does not** has two spaces at the end.
+The following line.
+
+This line has two spaces at the end.  
+The following line.
+
+(This is actually part of the [Markdown spec](https://daringfireball.net/projects/markdown/syntax).)
 
 
 ## Programmatic reports
@@ -237,12 +273,6 @@ _Let's go make a driver script_ that generates an output file for each diamond c
 
 TODO
 
-### Miscellaneous chunk options
-
-R Markdown documents may be split, with a primary document incorporating others via a [child document](https://bookdown.org/yihui/rmarkdown-cookbook/child-document.html) mechanism. 
-
-Don't forget about the `cache=TRUE` option. Critical for keeping the build time of longer, complex documents under control.
-
 
 ## Useful R packages
 
@@ -256,7 +286,6 @@ p <- ggplot(mtcars, aes(hp, mpg, size = cyl, color = disp)) + geom_point()
 ggplotly(p)
 ```
 
-
 ### DT
 
 Handy if you want to sort or filter your table data.
@@ -268,11 +297,11 @@ datatable(mtcars, rownames = TRUE, filter = "top",
           options = list(pageLength = 5, scrollX = TRUE))
 ```
 
-This takes _~~one~~ two_ lines of code in RMarkdown. Example based on [this post](https://holtzy.github.io/Pimp-my-rmd/#use_dt_for_tables).
+Example based on [this post](https://holtzy.github.io/Pimp-my-rmd/#use_dt_for_tables).
 
 ### reactable
 
-I haven't used the `reactable` package but it can make impressive tables, and link those tables to data visualizations:
+I haven't used the `reactable` package but it can make cool tables, and link those tables to data visualizations:
 
 ```{r, message=FALSE, warning=FALSE}
 library(dplyr)
@@ -297,10 +326,11 @@ reactable(data, columns = list(
 ))
 ```
 
+More information [here](https://glin.github.io/reactable/).
 
 ### leaflet
 
-I really like `leaflet`.
+I really like the simplicty of the `leaflet` package.
 
 ```{r leaflet, out.width='100%'}
 library(leaflet)
@@ -330,6 +360,10 @@ Nolan, Rachael H, Patrick N J Lane, Richard G Benyon, Ross A Bradstock, and Patr
 
 More details can be found [here](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html).
 
+## Bookdown
+
+Bookdown TODO
+
 
 ## Resources
 
@@ -339,10 +373,11 @@ Good resources:
 * The [R Markdown Cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/)
 * [15 Tips on Making Better Use of R Markdown](https://slides.yihui.org/2019-dahshu-rmarkdown#1)
 * [How to Make Beautiful Tables in R](https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/)
+* [Bookdown](https://bookdown.org/)
 
 
 ## The End
 
-Thanks for attending this workshop on Advanced R Markdown documents! We hope it was useful.
+Thanks for attending this workshop on Advanced R Markdown documents! I hope it was useful.
 
 This presentation was made using R Markdown version `r packageVersion("rmarkdown")` running under `r R.version.string`. It is available at https://rpubs.com/bpbond/630335. The code is [here](https://github.com/JGCRI/Rworkshops/blob/master/Advanced_RMarkdown.Rmd).
