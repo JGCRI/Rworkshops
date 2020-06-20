@@ -10,7 +10,7 @@ output:
     code_folding: hide
 ---
 
-```{r setup, include=FALSE}
+```{r arm-setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 library(ggplot2)
@@ -39,6 +39,8 @@ theme_set(theme_bw())
 * Bookdown
 
 **Goal: exposure to a variety of more advanced R Markdown techniques and tricks.**
+
+This is NOT intended to be a comprehensive survey of the possibilities with R Markdown.
 
 
 ## Under the hood {.tabset}
@@ -175,8 +177,8 @@ output:
     highlight: tango
 ```
 
-<img src="images-rmarkdown/theme-default.png" width = "75%">
-<img src="images-rmarkdown/theme-sandstone.png" width = "75%">
+<img src="images-rmarkdown/theme-default.png" width = "50%">
+<img src="images-rmarkdown/theme-sandstone.png" width = "50%">
 
 #### rmdformats
 
@@ -184,6 +186,7 @@ When the [rmdformats](https://github.com/juba/rmdformats) package is installed, 
 
 <img src="images-rmarkdown/theme-reaedthedown.png" width = "100%">
 
+There's also the [prettydoc](https://prettydoc.statr.me/) package.
 
 #### Custom CSS
 
@@ -192,11 +195,53 @@ You can use a custom [Cascading Style Sheet (CSS)](https://en.wikipedia.org/wiki
 
 ## Programmatic reports
 
-This is important.
+What if I want to run the same analysis, and/or generate the same report, for different datasets or conditions?
 
+<img src="images-rmarkdown/dataset_reports.png" width = "100%">
 
+This offers the possibility of tremendously extending the utility of `rmarkown`!
+
+### Parameters
+
+R Markdown documents can take parameters. These are specified in the YAML header as a name followed by a default value:
+
+```
+params:
+  year: 2018
+  region: Europe
+```
+
+and can then be accessed by code in the document, via a read-only list called `params`:
+
+```
+print(params$year)
+```
+
+_Let's go make an R Markdown document_ that takes one or more parameters, for example to produce a report on some part of the `diamonds` dataset.
+
+### render
+
+So far so good, but how do we _use_ this capability programmatically?
+
+The `rmarkdown::render()` function converts an input file to an output format, usually calling `knitr::knit()` and pandoc along the way.
+
+```
+rmarkdown::render("diamonds-report.Rmd", 
+  params = list(cut = "Ideal"),
+  output_file = "Ideal.html")
+```
+
+_Let's go make a driver script_ that generates an output file for each diamond cut in the dataset.
 
 ### Working directory issues
+
+TODO
+
+### Miscellaneous chunk options
+
+R Markdown documents may be split, with a primary document incorporating others via a [child document](https://bookdown.org/yihui/rmarkdown-cookbook/child-document.html) mechanism. 
+
+Don't forget about the `cache=TRUE` option. Critical for keeping the build time of longer, complex documents under control.
 
 
 ## Useful R packages
