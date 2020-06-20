@@ -17,12 +17,12 @@ library(ggplot2)
 theme_set(theme_bw())
 ```
 
-## Topics {data-background=#cceeff}
+## Topics and goals
 
 * Under the hood: YAML, R, Markdown, knitr, pandoc
 * R
     + Programmatic reports
-* HTML goodies
+* HTML and other goodies
     + Floating TOC
     + Tabsets
     + Cascading Style Sheets (CSS)
@@ -34,39 +34,46 @@ theme_set(theme_bw())
   + Leaflet
 * Tables
   + DT
-* Citations
+* Pandoc
+  + Citations
 * Bookdown
 
 **Goal: exposure to a variety of more advanced R Markdown techniques and tricks.**
 
 
-## About the YAML header
+## Under the hood {.tabset}
+
+Disclaimer: I'm not an expert, and this quickly gets _really_ complex.
+
+* `rmarkdown` is an R package for converting R Markdown documents into a variety of output formats
+* Its `render()` function processes R Markdown input, creating a [Markdown](https://en.wikipedia.org/wiki/Markdown) (`*.md`) file
+* (This uses `knitr`, an R package for dynamic report generation with R.)
+* This is then transformed into HTML by [Pandoc](https://pandoc.org/)
+* R Markdown files have a [YAML](https://en.wikipedia.org/wiki/YAML) header giving configuration options that can apply to many stages of this pipeline
+
+### R Markdown workflow
+
+<img src="images-rmarkdown/workflow.png" width = "100%">
+
+Original graphic from [The R Markdown Cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/rmarkdown-process.html)
+
+### Areas we'll be discussing
+
+<img src="images-rmarkdown/workflow-annotated.png" width = "100%">
+
+Original graphic from [The R Markdown Cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/rmarkdown-process.html)
+
 
 ## HTML goodies
 
-### Printing data frames
-
-For html output you can add the `df_print: paged` parameter to your YAML header to
-have printed data frames rendered as html tables.
-
-```
-output:
-  html_document:
-    df_print: paged
-```
-
-```{r, mtcars}
-mtcars
-```
-
-
 ### TOC and code folding
+
+Here's the YAML header for this presentation:
 
 ```
 ---
 title: "Advanced R Markdown"
 author: "BBL"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
 date: "`r "\u0060r format(Sys.time(), '%d %B, %Y')\u0060"`"
 output:
   html_document:
@@ -75,6 +82,20 @@ output:
     code_folding: hide
 ---
 ```
+
+**Things to notice:**
+
+* The `date` field has inline R code to dynamically insert the current date
+* The `html_document` setting for `output:` has three sub-settings:
+  + `toc: true` generates a table of contents (based on `#` and `##` lines)
+  + `toc_float: true` makes it 'floating'
+  + `code_folding: hide` turns on code folding with a default of hidden code
+
+```{r code-folding, fig.height=3}
+ggplot(diamonds, aes(carat, fill = cut)) +
+  geom_density(position = "stack")
+```
+
 
 ### Tabs {.tabset}
 
@@ -107,6 +128,37 @@ pairs(iris)
 ```{r}
 image(volcano)
 ```
+
+### Printing data frames
+
+For html output you can add the `df_print: paged` parameter to your YAML header to
+have printed data frames rendered as html tables.
+
+```
+output:
+  html_document:
+    df_print: paged
+```
+
+```{r, mtcars}
+mtcars
+```
+
+### Equations
+
+Equations are (mostly) straightforward and based on [LaTeX mathematical typesetting](https://www.latex-project.org/):
+
+R Markdown              | Final document
+----------------------- | ------------------
+`$x^{n}$`               | $x^{n}$
+`$\frac{a}{b}$`         | $\frac{a}{b}$
+`$\sum_{n=1}^{10} n^2$` | $\sum_{n=1}^{10} n^2$
+`$\sigma \Sigma$`        | $\sigma \Sigma$
+
+A handy summary is [here](https://www.calvin.edu/~rpruim/courses/s341/S17/from-class/MathinRmd.html).
+_Extremely_ usefully, the RStudio editor provides has an equation preview feature.
+
+<img src="images-rmarkdown/editor-eq-preview.png" width = "75%">
 
 
 ## Useful R packages
