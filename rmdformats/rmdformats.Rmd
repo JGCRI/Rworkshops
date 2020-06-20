@@ -1,0 +1,36 @@
+---
+title: "Theme example"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    highlight: kate
+---
+
+
+```{r setup, echo=FALSE, cache=FALSE}
+library(knitr)
+library(rmdformats)
+
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=FALSE,
+	             cache=TRUE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=FALSE)
+opts_knit$set(width=75)
+```
+
+
+This is my new document. It uses the `readthedown` theme from the `rmdformats` package.
+
+# Section 1
+
+Lorem ipsum dolor sit amet, purto feugait sea no, ut mei etiam movet homero. Nec mucius scripta recusabo te. Has possit salutatus intellegam ex, duo ex unum elit lobortis. Vel augue placerat honestatis te, case similique adversarium qui no. Etiam primis suscipit ea quo.
+
+# Section 2
+
+Ut vim esse euismod maiestatis. Quot aperiam iracundia duo ea, ne cibo inani vel. Enim feugiat oporteat no qui. Duis impedit vituperata duo cu, aeterno conclusionemque per id. Qui dicat oportere erroribus ex, soleat neglegentur nec cu, ei verterem salutandi repudiare eum.
+

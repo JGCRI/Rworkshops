@@ -131,7 +131,7 @@ image(volcano)
 
 ### Printing data frames
 
-For html output you can add the `df_print: paged` parameter to your YAML header to
+For HTML output only, you can add the `df_print: paged` parameter to your YAML header to
 have printed data frames rendered as html tables.
 
 ```
@@ -160,10 +160,50 @@ _Extremely_ usefully, the RStudio editor provides has an equation preview featur
 
 <img src="images-rmarkdown/editor-eq-preview.png" width = "75%">
 
+### Themes {.tabset}
+
+This quickly gets confusing (to me anyway).
+
+#### Bootswatch themes
+
+These are built into `rmarkdown` so easy to use; themes are from the Bootswatch theme [library](https://bootswatch.com/3/). Just insert lines into your YAML header:
+
+```
+output:
+  html_document:
+    theme: sandstone
+    highlight: tango
+```
+
+<img src="images-rmarkdown/theme-default.png" width = "75%">
+<img src="images-rmarkdown/theme-sandstone.png" width = "75%">
+
+#### rmdformats
+
+When the [rmdformats](https://github.com/juba/rmdformats) package is installed, it allows us create R Markdown documents using _very_ different themes.
+
+<img src="images-rmarkdown/theme-reaedthedown.png" width = "100%">
+
+
+#### Custom CSS
+
+You can use a custom [Cascading Style Sheet (CSS)](https://en.wikipedia.org/wiki/Cascading_Style_Sheets) file. You're on your own here :)
+
+
+## Programmatic reports
+
+This is important.
+
+
+
+### Working directory issues
+
 
 ## Useful R packages
 
-### Interactive graphs
+### plotly
+
+Interactive graphics.
 
 ```{r plotly, message=FALSE}
 library(plotly)
@@ -172,7 +212,9 @@ ggplotly(p)
 ```
 
 
-### Interactive tables
+### DT
+
+Handy if you want to sort or filter your table data.
 
 ```{r DT, message=FALSE}
 library(DT)
@@ -181,11 +223,39 @@ datatable(mtcars, rownames = TRUE, filter = "top",
           options = list(pageLength = 5, scrollX = TRUE))
 ```
 
-\
 This takes _~~one~~ two_ lines of code in RMarkdown. Example based on [this post](https://holtzy.github.io/Pimp-my-rmd/#use_dt_for_tables).
 
+### reactable
 
-### Interactive maps
+I haven't used the `reactable` package but it can make impressive tables, and link those tables to data visualizations:
+
+```{r, message=FALSE, warning=FALSE}
+library(dplyr)
+library(sparkline)
+library(reactable)
+
+data <- chickwts %>%
+  group_by(feed) %>%
+  summarise(weight = list(weight)) %>%
+  mutate(boxplot = NA, sparkline = NA)
+
+reactable(data, columns = list(
+  weight = colDef(cell = function(values) {
+    sparkline(values, type = "bar", chartRangeMin = 0, chartRangeMax = max(chickwts$weight))
+  }),
+  boxplot = colDef(cell = function(value, index) {
+    sparkline(data$weight[[index]], type = "box")
+  }),
+  sparkline = colDef(cell = function(value, index) {
+    sparkline(data$weight[[index]])
+  })
+))
+```
+
+
+### leaflet
+
+I really like `leaflet`.
 
 ```{r leaflet, out.width='100%'}
 library(leaflet)
@@ -213,6 +283,9 @@ Bond-Lamberty, Ben, Scott D Peckham, Stith T Gower, and Brent E Ewers. 2009. “
 Nolan, Rachael H, Patrick N J Lane, Richard G Benyon, Ross A Bradstock, and Patrick J Mitchell. 2014. “Changes in Evapotranspiration Following Wildfire in Resprouting Eucalypt Forests.” Ecohydrol. 6 (January). Wiley Online Library.
 
 
+More details can be found [here](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html).
+
+
 ## Resources
 
 Good resources:
@@ -220,16 +293,11 @@ Good resources:
 * The [R Markdown Cheat Sheet](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)
 * The [R Markdown Cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/)
 * [15 Tips on Making Better Use of R Markdown](https://slides.yihui.org/2019-dahshu-rmarkdown#1)
-* [Stack Overflow](https://stackoverflow.com/questions/tagged/r-markdown) of course
-* Allison Hill's [How I Teach R Markdown](https://alison.rbind.io/post/2020-05-28-how-i-teach-r-markdown/)
 * [How to Make Beautiful Tables in R](https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/)
 
 
-## The End {data-background=#cceeff}
+## The End
 
-Thanks for attending this introduction to R Markdown documents workshop! We hope it was useful.
+Thanks for attending this workshop on Advanced R Markdown documents! We hope it was useful.
 
-This presentation was made using R Markdown version `r packageVersion("rmarkdown")` running under `r R.version.string`.
-
-These slides are available at https://rpubs.com/bpbond/626346. (And they were written in R Markdown! The code is [here](https://github.com/JGCRI/Rworkshops/blob/master/Introduction_to_RMarkdown.Rmd).)
-
+This presentation was made using R Markdown version `r packageVersion("rmarkdown")` running under `r R.version.string`. It is available at https://rpubs.com/bpbond/630335. The code is [here](https://github.com/JGCRI/Rworkshops/blob/master/Advanced_RMarkdown.Rmd).
