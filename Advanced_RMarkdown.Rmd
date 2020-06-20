@@ -98,19 +98,19 @@ You can use tabs to organize your content:
 
 #### Cars
 
-```{r}
+```{r cars}
 plot(cars$speed, cars$dist)
 ```
 
 #### Iris
 
-```{r}
+```{r iris}
 pairs(iris)
 ```
 
 #### Volcano
 
-```{r}
+```{r volcano}
 image(volcano)
 ```
 
@@ -125,7 +125,7 @@ output:
     df_print: paged
 ```
 
-```{r, mtcars}
+```{r mtcars}
 mtcars
 ```
 
@@ -271,10 +271,18 @@ _Let's go make a driver script_ that generates an output file for each diamond c
 
 ### Working directory issues
 
-TODO
+Because R Markdown files are parsed in a _separate_ R instance, the [working directory](https://bookdown.org/ndphillips/YaRrr/the-working-directory.html) is the _location of your R Markdown file_.
+
+Don't mess with it via `setwd()`.
+
+<img src="images-rmarkdown/setwd-is-bad.png" width = "100%">
+
+Let's say that again, because it's important: **always use relative paths**.
+
+`render` has an `output_dir` parameter.
 
 
-## Useful R packages
+## Neat R packages
 
 ### plotly
 
@@ -344,21 +352,48 @@ leaflet() %>%
 
 ## Citations and references
 
+We might want to include citations. This is surprisingly easy; the source
+
 ```
 In a subsequent paper [@Bond-Lamberty2009-py], we used the same model 
 outputs to examine the _hydrological_ implications of these wildfire 
-regime shifts [@Nolan2014-us].
+regime shifts [@Nolan2014-us]. Nolan et al. [-@Nolan2014-us] found that...
 ```
- In a subsequent paper (Bond-Lamberty et al. 2009), we used the same model outputs to examine the _hydrological_ implications of these wildfire regime shifts (Nolan et al. 2014).
 
-**References**
+becomes:
 
-Bond-Lamberty, Ben, Scott D Peckham, Stith T Gower, and Brent E Ewers. 2009. “Effects of Fire on Regional Evapotranspiration in the Central Canadian Boreal Forest.” Glob. Chang. Biol. 15 (5): 1242–54.
+>In a subsequent paper (Bond-Lamberty et al. 2009), we used the same model outputs to examine the _hydrological_ implications of these wildfire regime shifts (Nolan et al. 2014). Nolan
+ et al. (2014) found that...
+>
+>**References**
+>
+>Bond-Lamberty, Ben, Scott D Peckham, Stith T Gower, and Brent E Ewers. 2009. “Effects of Fire on Regional Evapotranspiration in the Central Canadian Boreal Forest.” Glob. Chang. Biol. 15 (5): 1242–54.
+>
+>Nolan, Rachael H, Patrick N J Lane, Richard G Benyon, Ross A Bradstock, and Patrick J Mitchell. 2014. “Changes in Evapotranspiration Following Wildfire in Resprouting Eucalypt Forests.” Ecohydrol. 6 (January). Wiley Online Library.
 
-Nolan, Rachael H, Patrick N J Lane, Richard G Benyon, Ross A Bradstock, and Patrick J Mitchell. 2014. “Changes in Evapotranspiration Following Wildfire in Resprouting Eucalypt Forests.” Ecohydrol. 6 (January). Wiley Online Library.
+To do this we include a new in (of course) the YAML header, for example:
 
+---
+bibliography: bibliography.json
+---
+
+While `*.json` is preferred, a wide variety of file formats can be accommodated:
+
+Format      | File extension
+----------- | -------
+CSL-JSON    | .json
+MODS        | .mods
+BibLaTeX    | .bib
+BibTeX      | .bibtex
+RIS         | .ris
+EndNote     | .enl
+EndNote XML | .xml
+ISI	        | .wos
+MEDLINE     | .medline
+Copac       | .copac
 
 More details can be found [here](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html).
+
 
 ## Bookdown
 
