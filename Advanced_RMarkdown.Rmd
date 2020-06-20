@@ -1,0 +1,183 @@
+---
+title: "Advanced R Markdown"
+author: "BBL"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+theme_set(theme_bw())
+```
+
+## Topics {data-background=#cceeff}
+
+* Under the hood: YAML, R, Markdown, knitr, pandoc
+* R
+    + Programmatic reports
+* HTML goodies
+    + Floating TOC
+    + Tabsets
+    + Cascading Style Sheets (CSS)
+    + Data frames as tables
+    + Inline equations
+* Other packages
+* Interactive figures and maps
+  + Plotly
+  + Leaflet
+* Tables
+  + DT
+* Citations
+* Bookdown
+
+**Goal: exposure to a variety of more advanced R Markdown techniques and tricks.**
+
+
+## About the YAML header
+
+## HTML goodies
+
+### Printing data frames
+
+For html output you can add the `df_print: paged` parameter to your YAML header to
+have printed data frames rendered as html tables.
+
+```
+output:
+  html_document:
+    df_print: paged
+```
+
+```{r, mtcars}
+mtcars
+```
+
+
+### TOC and code folding
+
+```
+---
+title: "Advanced R Markdown"
+author: "BBL"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+date: "`r "\u0060r format(Sys.time(), '%d %B, %Y')\u0060"`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+```
+
+### Tabs {.tabset}
+
+You can use tabs to organize your content:
+
+```
+## Tabs {.tabset}
+
+### Tab 1 name
+(content)
+
+### Tab 2 name
+(content)
+```
+
+#### Cars
+
+```{r}
+plot(cars$speed, cars$dist)
+```
+
+#### Iris
+
+```{r}
+pairs(iris)
+```
+
+#### Volcano
+
+```{r}
+image(volcano)
+```
+
+
+## Useful R packages
+
+### Interactive graphs
+
+```{r plotly, message=FALSE}
+library(plotly)
+p <- ggplot(mtcars, aes(hp, mpg, size = cyl, color = disp)) + geom_point()
+ggplotly(p)
+```
+
+
+### Interactive tables
+
+```{r DT, message=FALSE}
+library(DT)
+library(gapminder)
+datatable(mtcars, rownames = TRUE, filter = "top", 
+          options = list(pageLength = 5, scrollX = TRUE))
+```
+
+\
+This takes _~~one~~ two_ lines of code in RMarkdown. Example based on [this post](https://holtzy.github.io/Pimp-my-rmd/#use_dt_for_tables).
+
+
+### Interactive maps
+
+```{r leaflet, out.width='100%'}
+library(leaflet)
+leaflet() %>% 
+  addTiles() %>%
+  setView(-76.9219, 38.9709, zoom = 17) %>%
+  addPopups(-76.9219, 38.9709,
+            "Here is the <b>Joint Global Change Research Institute</b>")
+```
+
+
+## Citations and references
+
+```
+In a subsequent paper [@Bond-Lamberty2009-py], we used the same model 
+outputs to examine the _hydrological_ implications of these wildfire 
+regime shifts [@Nolan2014-us].
+```
+ In a subsequent paper (Bond-Lamberty et al. 2009), we used the same model outputs to examine the _hydrological_ implications of these wildfire regime shifts (Nolan et al. 2014).
+
+**References**
+
+Bond-Lamberty, Ben, Scott D Peckham, Stith T Gower, and Brent E Ewers. 2009. “Effects of Fire on Regional Evapotranspiration in the Central Canadian Boreal Forest.” Glob. Chang. Biol. 15 (5): 1242–54.
+
+Nolan, Rachael H, Patrick N J Lane, Richard G Benyon, Ross A Bradstock, and Patrick J Mitchell. 2014. “Changes in Evapotranspiration Following Wildfire in Resprouting Eucalypt Forests.” Ecohydrol. 6 (January). Wiley Online Library.
+
+
+## Resources
+
+Good resources:
+
+* The [R Markdown Cheat Sheet](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)
+* The [R Markdown Cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/)
+* [15 Tips on Making Better Use of R Markdown](https://slides.yihui.org/2019-dahshu-rmarkdown#1)
+* [Stack Overflow](https://stackoverflow.com/questions/tagged/r-markdown) of course
+* Allison Hill's [How I Teach R Markdown](https://alison.rbind.io/post/2020-05-28-how-i-teach-r-markdown/)
+* [How to Make Beautiful Tables in R](https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/)
+
+
+## The End {data-background=#cceeff}
+
+Thanks for attending this introduction to R Markdown documents workshop! We hope it was useful.
+
+This presentation was made using R Markdown version `r packageVersion("rmarkdown")` running under `r R.version.string`.
+
+These slides are available at https://rpubs.com/bpbond/626346. (And they were written in R Markdown! The code is [here](https://github.com/JGCRI/Rworkshops/blob/master/Introduction_to_RMarkdown.Rmd).)
+
