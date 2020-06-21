@@ -249,14 +249,14 @@ R Markdown documents can take parameters. These are specified in the YAML header
 
 ```
 params:
-  year: 2018
-  region: Europe
+  cut: NULL
+  min_price: 0
 ```
 
 and can then be accessed by code in the document, via a read-only list called `params`:
 
 ```
-print(params$year)
+print(params$min_price)
 ```
 
 _Let's go make an R Markdown document_ that takes one or more parameters, for example to produce a report on some part of the `diamonds` dataset.
@@ -285,9 +285,14 @@ Don't mess with it via `setwd()`.
 
 <img src="images-rmarkdown/setwd-is-bad.png" width = "100%">
 
-Let's say that again, because it's important: **always use relative paths**.
+>If the first line of your #rstats script is setwd("C:\Users\jenny\path\that\only\I\have"), I will come into your lab and SET YOUR COMPUTER ON FIRE.  [Source](https://twitter.com/hadleywickham/status/940021008764846080)
 
-`render` has an `output_dir` parameter.
+**It's almost _always_ much better to use relative paths.** Absolute paths aren't robust and break reproducibility and transportability.
+
+Note that `render` has an `output_dir` parameter.
+
+Finally, check out the [here](https://github.com/jennybc/here_here) package, which
+tries to figure out the top level of your current project using some sane heuristics.
 
 
 ## Neat R packages
@@ -411,7 +416,7 @@ More details can be found [here](https://rmarkdown.rstudio.com/authoring_bibliog
 Larger projects can become difficult to manage in a single R Markdown file (or even
 one with child files).
 
-The [bookdown](https://bookdown.org/yihui/rmarkdown/books.html) package (by the [author](https://yihui.org/en/) as `rmarkdown`) offers several key improvements:
+The [bookdown](https://bookdown.org/yihui/rmarkdown/books.html) package (by the same [author](https://yihui.org/en/) as `rmarkdown`) offers several key improvements:
 
 * Books and reports can be built from multiple R Markdown files
 * Documents can easily be exported in a range of formats suitable for publishing, including PDF, e-books and HTML websites
