@@ -59,7 +59,7 @@ Here's the YAML header for this presentation:
 ---
 title: "Advanced R Markdown"
 author: "BBL"
-date: "`r "\u0060r format(Sys.time(), '%d %B, %Y')\u0060"`"
+date: "`r "\u0060r format(Sys.time(), '%d %B %Y')\u0060"`"
 output:
   html_document:
     toc: true
