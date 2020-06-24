@@ -21,6 +21,12 @@ theme_set(theme_bw())
 
 <------- Topics are to the left
 
+**This workshop assumes (but ask questions as needed!) you are:**
+
+* familiar with basic data structures and control structure of R: `data.frame`, `for`, function calls, parameters, etc. 
+* comfortable with the idea, and basic mechanics, of R Markdown documents: how to make them, chunks and chunk options, inline code
+* have heard of terms like [HTML](https://en.wikipedia.org/wiki/HTML)
+
 **Goal: exposure to a variety of more advanced R Markdown techniques and tricks.**
 
 Note that this is NOT intended to be a comprehensive survey of the possibilities with R Markdown.
@@ -203,6 +209,53 @@ The first 10 letters are `` `r "\u0060r knitr::combine_words(LETTERS[1:10])\u006
 
 The first 10 letters are `r knitr::combine_words(LETTERS[1:10])`.
 
+### Chunk defaults
+
+Most R Markdown documents (including this one) have a first chunk that, among other things, sets the _default chunk options_:
+
+```
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Computable chunk options
+
+Chunk options can take non-constant values; in fact, they can take values _from arbitrary R expressions_: 
+
+````markdown
+`r ''````{r}
+# Define a global figure width value
+my_fig_width <- 7
+```
+
+`r ''````{r, fig.width = my_fig_width}
+plot(cars)
+```
+````
+
+An example of R code in a chunk option setting:
+
+````markdown
+`r ''````{r}
+width_small <- 4
+width_large <- 7
+small_figs <- TRUE
+```
+
+`r ''````{r, fig.width = if(small_figs) width_small else width_large}
+plot(cars)
+```
+````
+
+Here's a chunk that only executes when a particular package is available:
+
+````markdown
+`r ''````{r, eval = require("ggplot2")}
+ggplot2::ggplot(cars, aes(speed, dist)) + geom_point()
+```
+````
+
+More information [here](https://bookdown.org/yihui/rmarkdown-cookbook/chunk-variable.html).
+
 ### Child documents
 
 R Markdown documents may be split, with a primary document incorporating others via a [child document](https://bookdown.org/yihui/rmarkdown-cookbook/child-document.html) mechanism. 
@@ -212,15 +265,6 @@ R Markdown documents may be split, with a primary document incorporating others 
 Don't forget about the `cache=TRUE` chunk option. Critical for keeping the build time of longer, complex documents under control.
 
 [![](images-rmarkdown/two-hard-things.png)](https://twitter.com/codinghorror/status/506010907021828096?s=20)
-
-### Chunk defaults
-
-Most R Markdown documents (including this one) have a first chunk that, among other things, sets the _default chunk options_:
-
-```
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 
 ### Line breaks
 
