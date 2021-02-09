@@ -44,25 +44,41 @@ From Hadley's book https://vita.had.co.nz/papers/layered-grammar.pdf
 
 # The pieces of a ggplot2 visualization
 
+<img src="images-ggplot2/layers-final-plot.png" width = "75%">
+
+<img src="images-ggplot2/layers-all.png" width = "75%">
+
 ## Setup: the dataset
+
+<img src="images-ggplot2/layers-7-data.png" width = "75%">
 
 - Implications for how we structure our data (long versus wide)
 
 ## The ggplot call
 
-## The aesthetics mapping
+<img src="images-ggplot2/layers-6-ggplot.png" width = "75%">
 
 ## The geom(s)
+
+<img src="images-ggplot2/layers-5-geoms.png" width = "75%">
 
 - Spend time here. Demonstrate different geoms applied to same data
 - If you define aesthetics in geoms they _override_ the base plot aesthetics
 
+## The aesthetics mapping
+
+<img src="images-ggplot2/layers-4-aesthetics.png" width = "75%">
+
 ## The labels
+
+<img src="images-ggplot2/layers-3-labels.png" width = "75%">
 
 - ggplot makes default labels from columns
 - xlab, ylab, ggtitle
 
 ## The themes
+
+<img src="images-ggplot2/layers-2-themes.png" width = "75%">
 
 - can apply many pre-made themes
 - examples
@@ -70,8 +86,12 @@ From Hadley's book https://vita.had.co.nz/papers/layered-grammar.pdf
 
 ## The facets
 
+<img src="images-ggplot2/layers-1-facets.png" width = "75%">
+
 - facet_wrap
 - facet_grid
+
+<img src="images-ggplot2/layers-final-plot.png" width = "75%">
 
 ## Things we haven't talked about (with links)
 
