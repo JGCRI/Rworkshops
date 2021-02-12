@@ -1,8 +1,13 @@
 ---
 title: "Introduction to data visualization using ggplot2"
 author: "BBL and SCP"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: html_document
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_float: true
+    code_folding: show
 ---
 
 ```{r setup, include=FALSE}
@@ -10,7 +15,40 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-# Data visualization - general intro and concepts
+## Topics {data-background=#cceeff}
+
+* Data visualization concepts
+* A grammar of graphics
+* An introduction to ggplot2
+* The pieces of a ggplot2 plot
+* Implications for data structure
+* Data, aesthetics, geoms, labels, themes, facets
+* Accessibility
+* Saving plots
+* Fancier things
+* Resources
+
+**Goal: to be comfortable making basic reproducible documents.**
+
+
+## Assumptions
+
+<span style="color: red;">**We assume you're familiar with the basic mechanics of R:**</span>
+
+* Starting R/RStudio
+* Scripts, variables, and data frames
+
+So _not_ at this level :)
+
+<img src="images-ggplot2/notepad.png" width = "75%">
+
+**This is intended to be a hands-on workshop**, so we also assume:
+
+* You have R (and probably RStudio) installed
+* You have the [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html) package installed
+
+
+# Data visualization
 
 - Visualizing data is critical! 
     example from https://towardsdatascience.com/a-comprehensive-guide-to-the-grammar-of-graphics-for-effective-visualization-of-multi-dimensional-1f92b4ed4149
@@ -19,7 +57,46 @@ General concepts of effective data visualization
 
 - Who is audience, what are you trying to communicate, etc.
 
-- Accessibility
+- Importance of accessibility
+
+## R plotting pre-ggplot2
+
+One of the simplest datasets included with R is `cars`:
+
+```{r plot-cars, warning=FALSE}
+library(tibble)
+as_tibble(cars)
+plot(cars)
+```
+
+That seems pretty good! What's the problem?
+
+Well, what about `iris`? This is a [famous](https://rpubs.com/AjinkyaUC/Iris_DataSet) dataset:
+
+```{r show-iris, warning=FALSE}
+as_tibble(iris)
+```
+
+<img src="images-ggplot2/iris.png" width = "100%">
+
+Let's plot two of its columns against each other:
+
+```{r plot-iris}
+plot(iris$Sepal.Length, iris$Sepal.Width, col = iris$Species)
+legend(7, 4.3, 
+       unique(iris$Species),
+       col=1:length(iris$Species), 
+       pch = 1)
+```
+
+This is a bunch of code for such a simple plot; note that:
+
+* The `plot` code understands numeric vectors, so we need to repeatedly specify `iris$<column>`
+* This means the default axis labels are ugly (though they can be changed)
+* The legend is _totally disconnected_ from the plot: we have to do everything (color
+assignment, etc.) manually
+
+Things quickly gets worse if we want more complexity or features.
 
 
 # A grammar of graphics
@@ -38,47 +115,93 @@ General concepts of effective data visualization
 
 From Hadley's book https://vita.had.co.nz/papers/layered-grammar.pdf
 
-# Data visualization in R pre-ggplot2
+# The ggplot2 package
 
-- Brief example of using base R's `plot()`
 
-# The pieces of a ggplot2 visualization
+# Steps to a ggplot2 plot
 
-<img src="images-ggplot2/layers-final-plot.png" width = "75%">
+<img src="images-ggplot2/layers-final-plot.png" width = "100%">
 
-<img src="images-ggplot2/layers-all.png" width = "75%">
+<img src="images-ggplot2/layers-all.png" width = "100%">
 
 ## Setup: the dataset
 
-<img src="images-ggplot2/layers-7-data.png" width = "75%">
+<img src="images-ggplot2/layers-7-data.png" width = "100%">
 
 - Implications for how we structure our data (long versus wide)
 
 ## The ggplot call
 
-<img src="images-ggplot2/layers-6-ggplot.png" width = "75%">
+<img src="images-ggplot2/layers-6-ggplot.png" width = "100%">
+
+The ggplot call
+
+## The aesthetics mapping
+
+<img src="images-ggplot2/layers-4-aesthetics.png" width = "100%">
+
+The aesthetics mapping
+
+## Data structure
+
+This idea of mapping aesthetics to variables has implications for our data structure.
+
+Remember what `iris` look like:
+
+```{r show-iris-again, warning=FALSE, echo=FALSE}
+as_tibble(iris)
+```
+
+This is problematic. What if we wanted an aesthetic (like color) to spend on species? 
+
+TODO idea of long/tidy data
+
+With all this in mind, it's clear we need to _reshape_ our data.
+
+```{r}
+iris_long <- reshape(iris, 
+                     varying = c("Sepal.Length", 
+                                 "Sepal.Width",
+                                 "Petal.Length",
+                                 "Petal.Width"), 
+                     timevar = "dimension",
+                     direction = "long")
+head(iris_long)
+```
+
+With this reshaping, we can map an _aesthetic_ to a _column_.
+
+**QUESTION.** Which columns are likely candidates for aesthetics? Why? 
 
 ## The geom(s)
 
-<img src="images-ggplot2/layers-5-geoms.png" width = "75%">
+<img src="images-ggplot2/layers-5-geoms.png" width = "100%">
 
 - Spend time here. Demonstrate different geoms applied to same data
 - If you define aesthetics in geoms they _override_ the base plot aesthetics
 
-## The aesthetics mapping
+## Tabs {.tabset}
 
-<img src="images-ggplot2/layers-4-aesthetics.png" width = "75%">
+### geom_point
+(content)
+
+### geom_line
+(content)
+
+### geom_xxx
+(content)
+
 
 ## The labels
 
-<img src="images-ggplot2/layers-3-labels.png" width = "75%">
+<img src="images-ggplot2/layers-3-labels.png" width = "100%">
 
 - ggplot makes default labels from columns
 - xlab, ylab, ggtitle
 
 ## The themes
 
-<img src="images-ggplot2/layers-2-themes.png" width = "75%">
+<img src="images-ggplot2/layers-2-themes.png" width = "100%">
 
 - can apply many pre-made themes
 - examples
@@ -86,25 +209,30 @@ From Hadley's book https://vita.had.co.nz/papers/layered-grammar.pdf
 
 ## The facets
 
-<img src="images-ggplot2/layers-1-facets.png" width = "75%">
+<img src="images-ggplot2/layers-1-facets.png" width = "100%">
 
 - facet_wrap
 - facet_grid
 
-<img src="images-ggplot2/layers-final-plot.png" width = "75%">
+<img src="images-ggplot2/layers-final-plot.png" width = "100%">
 
-## Things we haven't talked about (with links)
+# Accessibility
+
+# Fancier things
+
+Things we haven't talked about (with links)
 
 - Statistical transformations
 - Coordinate system changes
 - Details about the theme system
 - Annotations
-- Plotting different datasets in a single plot
+- Animations
 - Combining different plots in a larger figure
 
-## Resources
+# Resources
 
 - Cheat sheets
+- The ggplot2 online help: https://ggplot2.tidyverse.org/reference/
 - The book
 - Link to these slides
 - Link to repository
