@@ -134,7 +134,14 @@ From Hadley's book https://vita.had.co.nz/papers/layered-grammar.pdf
 
 <img src="images-ggplot2/layers-6-ggplot.png" width = "100%">
 
-The ggplot call
+Let's call `ggplot()` using the iris dataset!
+
+```{r ggplot-call}
+library(ggplot2)
+ggplot(iris)
+```
+
+Well, that was a bit disappointing.
 
 ## The aesthetics mapping
 
@@ -142,19 +149,19 @@ The ggplot call
 
 The aesthetics mapping
 
-## Data structure
+## Interlude: data structure
 
 This idea of mapping aesthetics to variables has implications for our data structure.
 
 Remember what `iris` look like:
 
 ```{r show-iris-again, warning=FALSE, echo=FALSE}
-as_tibble(iris)
+iris
 ```
 
-This is problematic. What if we wanted an aesthetic (like color) to spend on species? 
+This is problematic. What if we wanted an aesthetic like `color` to depend on what dimension or organ we're measuring?
 
-TODO idea of long/tidy data
+### Long/tidy data
 
 With all this in mind, it's clear we need to _reshape_ our data.
 
@@ -166,12 +173,16 @@ iris_long <- reshape(iris,
                                  "Petal.Width"), 
                      timevar = "dimension",
                      direction = "long")
-head(iris_long)
+iris_long
 ```
 
 With this reshaping, we can map an _aesthetic_ to a _column_.
 
 **QUESTION.** Which columns are likely candidates for aesthetics? Why? 
+
+```{r}
+iris_plot <- ggplot(iris_long, aes(x = Sepal, y = Petal, color = Species))
+```
 
 ## The geom(s)
 
@@ -180,16 +191,44 @@ With this reshaping, we can map an _aesthetic_ to a _column_.
 - Spend time here. Demonstrate different geoms applied to same data
 - If you define aesthetics in geoms they _override_ the base plot aesthetics
 
-## Tabs {.tabset}
+### Let's try different geoms {.tabset}
 
-### geom_point
-(content)
+#### geom_point
 
-### geom_line
-(content)
+```{r iris-plot-point}
+iris_plot + geom_point()
+```
 
-### geom_xxx
-(content)
+#### geom_line
+
+```{r iris-plot-line}
+iris_plot + geom_line()
+```
+
+#### geom_bin2d
+
+```{r iris-plot-bin2d}
+iris_plot + geom_bin2d()
+```
+
+#### geom_hex
+
+```{r iris-plot-hex}
+iris_plot + geom_area()
+```
+
+#### geom_violin
+
+```{r iris-plot-violin}
+iris_plot + geom_violin()
+```
+
+#### geom_dotplot
+
+```{r iris-plot-dotplot, error=TRUE}
+iris_plot + geom_dotplot()
+```
+
 
 
 ## The labels
