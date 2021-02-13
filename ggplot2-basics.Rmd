@@ -405,7 +405,8 @@ ggplot(iris_long, aes(Sepal, Petal)) +
 
 Labeling your plots well is [important](https://xkcd.com/833/).
 
-![](https://imgs.xkcd.com/comics/convincing.png)
+![Image name](https://imgs.xkcd.com/comics/convincing.png)
+
 As we've seen ggplot takes its default axis and aesthetic labels from the columns you specify. These are easy to change using the `xlab` and `ylab` functions; the `ggtitle` function is available as well:
 
 ```{r iris-labels, message=FALSE}
