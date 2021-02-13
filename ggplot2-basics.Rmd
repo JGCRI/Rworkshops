@@ -14,6 +14,19 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+<span style="color: red;">**TO DO LIST:**</span>
+
+* Data visualization section - general principles
+* Grammar of graphics
+* The ggplot2 package
+* The dataset - brief
+* The ggplot call - finish
+* Labels - finish
+* Themes
+* Facets
+* Accessibility
+* Review and practice central aesthetics, geoms, smoother sections
+
 
 ## Topics {data-background=#cceeff}
 
@@ -64,8 +77,7 @@ General concepts of effective data visualization
 One of the simplest datasets included with R is `cars`:
 
 ```{r plot-cars, warning=FALSE}
-library(tibble)
-as_tibble(cars)
+cars
 plot(cars)
 ```
 
@@ -74,14 +86,14 @@ That seems pretty good! What's the problem?
 Well, what about `iris`? This is a [famous](https://rpubs.com/AjinkyaUC/Iris_DataSet) dataset:
 
 ```{r show-iris, warning=FALSE}
-as_tibble(iris)
+iris
 ```
 
 <img src="images-ggplot2/iris.png" width = "100%">
 
-Let's plot two of its columns against each other:
+Let's plot two of its columns against each other, coloring by species:
 
-```{r plot-iris}
+```{r plot-iris-base}
 plot(iris$Sepal.Length, iris$Sepal.Width, col = iris$Species)
 legend(7, 4.3, 
        unique(iris$Species),
@@ -115,18 +127,32 @@ Things quickly gets worse if we want more complexity or features.
 
 From Hadley's book https://vita.had.co.nz/papers/layered-grammar.pdf
 
-# The ggplot2 package
+# The `ggplot2` package
 
 
 # Steps to a ggplot2 plot
 
+We have a plot we want to make:
+
 <img src="images-ggplot2/layers-final-plot.png" width = "100%">
+
+In the grammar of graphics / ggplot2 system, plots are built up from sequential
+layers: these are procedural steps, but also literal visual _layers_, 
+the net result of which is the final plot. Later steps can modify and
+override what's 'presented' by previous layers.
+
+Visually:
 
 <img src="images-ggplot2/layers-all.png" width = "100%">
 
-## Setup: the dataset
+We're going to walk through these layers, one by one.
+
+## The dataset
 
 <img src="images-ggplot2/layers-7-data.png" width = "100%">
+
+The first (or in back-to-front numbering, as in the image above,
+the seventh) step involves our data.
 
 - Implications for how we structure our data (long versus wide)
 
@@ -136,16 +162,16 @@ From Hadley's book https://vita.had.co.nz/papers/layered-grammar.pdf
 
 Let's call `ggplot()` using the iris dataset!
 
-```{r ggplot-call}
+```{r ggplot-call, warning=FALSE}
 library(ggplot2)
 ggplot(iris)
 ```
 
 Well, that was a bit disappointing.
 
-## The aesthetics mapping
+## Aesthetics mapping
 
-<img src="images-ggplot2/layers-4-aesthetics.png" width = "100%">
+<img src="images-ggplot2/layers-5-aesthetics.png" width = "100%">
 
 The aesthetics mapping
 
@@ -153,7 +179,7 @@ The aesthetics mapping
 
 This idea of mapping aesthetics to variables has implications for our data structure.
 
-Remember what `iris` look like:
+Remember what `iris` looks like:
 
 ```{r show-iris-again, warning=FALSE, echo=FALSE}
 iris
@@ -161,7 +187,7 @@ iris
 
 This is problematic. What if we wanted an aesthetic like `color` to depend on what dimension or organ we're measuring?
 
-### Long/tidy data
+### Long (tidy) data
 
 With all this in mind, it's clear we need to _reshape_ our data.
 
@@ -181,17 +207,44 @@ With this reshaping, we can map an _aesthetic_ to a _column_.
 **QUESTION.** Which columns are likely candidates for aesthetics? Why? 
 
 ```{r}
-iris_plot <- ggplot(iris_long, aes(x = Sepal, y = Petal, color = Species))
+iris_plot <- ggplot(iris_long, aes(x = Sepal, 
+                                   y = Petal, 
+                                   color = Species))
 ```
 
-## The geom(s)
+## Geoms
 
-<img src="images-ggplot2/layers-5-geoms.png" width = "100%">
+<img src="images-ggplot2/layers-4-geoms.png" width = "100%">
 
-- Spend time here. Demonstrate different geoms applied to same data
-- If you define aesthetics in geoms they _override_ the base plot aesthetics
+### _Now_ we can plot iris! {.tabset}
 
-### Let's try different geoms {.tabset}
+Compare the ggplot2 code to the base R code we saw earlier:
+
+#### ggplot2
+
+```{r iris-plot-ggplot}
+ggplot(iris) + 
+  aes(Sepal.Length, Sepal.Width, color = Species) + 
+  geom_point()
+```
+
+#### base R
+
+```{r iris-plot-base2}
+plot(iris$Sepal.Length, iris$Sepal.Width, col = iris$Species)
+legend(7, 4.3, 
+       unique(iris$Species),
+       col=1:length(iris$Species), 
+       pch = 1)
+```
+
+### {-}
+
+Now the advantages of ggplot2 and the grammar-of-graphics approach start to get very clear.
+
+### Same data, different geoms {.tabset}
+
+Geoms have different aesthetic requirements, and not every geom works with every dataset (visually or computationally): 
 
 #### geom_point
 
@@ -229,16 +282,141 @@ iris_plot + geom_violin()
 iris_plot + geom_dotplot()
 ```
 
+#### {-}
 
 
-## The labels
+### Using multiple geoms
+
+You can have as many geoms in a plot as you want. Later geoms are drawn
+in front of earlier ones:
+
+```{r two-geoms}
+iris_plot + geom_density_2d() + geom_point()
+```
+
+### Geoms and aesthetics
+
+Because of the _layering principle_ we discussed above, later steps and in
+particular geoms override earlier ones as the plot is built up.
+
+In particular, if you define aesthetics in geoms they override any earlier definitions _but only within that geom_:
+
+```{r two-geoms-aesthetics}
+iris_plot + geom_density_2d() + geom_point(aes(color = dimension))
+```
+
+This doesn't make much sense, but this might:
+
+```{r two-geoms-aesthetics2}
+iris_plot + 
+  geom_density_2d(aes(linetype = dimension)) + 
+  geom_point(aes(shape = dimension))
+```
+
+**What aesthetics are operative in this plot?**
+
+* At the _plot level_, `x = Sepal`, `y = Petal`, and `color = Species`
+* The plot aesthetics hold for `geom_point` but it _also_ uses `shape = dimension`
+* The plot aesthetics hold for `geom_density2d` but it _also_ uses `linetype = dimension`
+
+### Geoms that don't really depend on the data
+
+Some geoms are handy for annotation or to help with interpretation:
+
+```{r two-geoms-ablines}
+iris_plot + 
+  geom_density_2d(aes(linetype = dimension)) + 
+  geom_point(aes(shape = dimension)) +
+  # vertical line
+  geom_vline(xintercept = 5) +
+  # horizontal line
+  geom_hline(yintercept = 6, color = "purple", linetype = 2) +
+  # a-b line
+  geom_abline(size = 10, alpha = 0.25, slope = 0.3)
+```
+
+There's also a useful `annotate()` function; see its documentation.
+
+### What geom should I use?
+
+
+## Smoothers and models
+
+This is really an extension of the section on geoms above. Let's go back
+to our basic `iris` plot:
+
+```{r iris-smooth0}
+iris_plot + geom_point()
+```
+
+We frequently would like to fit, or show, trend lines with point data. The
+easiest way to do this is with `geom_smooth()`:
+
+```{r iris-smooth1}
+iris_plot + geom_point() + geom_smooth()
+```
+
+What's happened here?
+
+* By default, `geom_smooth` uses a [loess smoother](http://r-statistics.co/Loess-Regression-With-R.html),
+which is just a form
+of [local regression](https://en.wikipedia.org/wiki/Local_regression)
+* This is noted in the diagnostic message printed by `geom_smooth` 
+* `geom_smooth` inherited the plot aesthetics (x, y, color), so it fit separately to each color (group of data)
+
+More likely, we would like a simple linear regression—-i.e., trend lines. We just need to override the default and tell is to use R's [lm](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/lm) function:
+
+```{r iris-smooth2, message=FALSE}
+iris_plot + geom_point() + geom_smooth(method = "lm")
+```
+
+We might also want to fit an _overall_ trend line, to the pooled data (i.e.,
+without groups). You might be tempted in this case to override the
+color aesthetic to a constant value, and be done. This works, but it's not ideal. Better:
+
+```{r iris-smooth3, message=FALSE}
+iris_plot + geom_point() + 
+  geom_smooth(method = "lm") +   # per-group trend line
+  geom_smooth(method = "lm",  
+              color = "black", 
+              group = 1,         # pooled; intent is clear
+              linetype = 2)       
+```
+
+Behind the scenes:
+
+* Our `color` aesthetic controls the `group` aesthetic in this plot
+* `group` is ultimately what determines how the data are split up for computation and plotting
+* Setting `group = 1` makes it crystal clear what we want:
+a single `group` for the second `geom_smooth`.
+
+Finally, we can use any smoothing function we want, including custom ones.
+
+```{r iris-smooth4, message=FALSE}
+ggplot(iris_long, aes(Sepal, Petal)) + 
+  geom_point() +
+  geom_smooth(method = "lm") +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2))    
+```
+
+## Labels
 
 <img src="images-ggplot2/layers-3-labels.png" width = "100%">
 
-- ggplot makes default labels from columns
-- xlab, ylab, ggtitle
+Labeling your plots well is [important](https://xkcd.com/833/).
 
-## The themes
+![](https://imgs.xkcd.com/comics/convincing.png)
+As we've seen ggplot takes its default axis and aesthetic labels from the columns you specify. These are easy to change using the `xlab` and `ylab` functions; the `ggtitle` function is available as well:
+
+```{r iris-labels, message=FALSE}
+iris_plot + geom_point() + 
+  geom_smooth(method = "lm") +
+  xlab("What is a sepal again?") +
+  ylab("Petal (cm)") +
+  ggtitle("This is starting to look like a real plot!")
+```
+
+## Themes
 
 <img src="images-ggplot2/layers-2-themes.png" width = "100%">
 
@@ -246,7 +424,7 @@ iris_plot + geom_dotplot()
 - examples
 - more available online, e.g. xkcd theme
 
-## The facets
+## Facets
 
 <img src="images-ggplot2/layers-1-facets.png" width = "100%">
 
@@ -257,6 +435,54 @@ iris_plot + geom_dotplot()
 
 # Accessibility
 
+# A complicated example
+
+This figure is from a [recent paper](https://onlinelibrary.wiley.com/doi/full/10.1111/gcb.15353) we published with many co-authors in GCB:
+
+<img src="images-ggplot2/figure3-climate-whittaker.png" width = "100%">
+
+This seems--and is--complex, but you now have the tools to see what's happening in the code that generates the figure.
+
+```{r, eval=FALSE}
+# Whittaker biome plot
+library(plotbiomes)
+p_inset <- whittaker_base_plot() +
+  geom_point(data = cosore_points, 
+             aes(x = mat_cosore, y = map_cosore / 10),
+             color = "black", shape = 4) +
+  coord_cartesian(ylim = c(0, 500)) +
+  theme(axis.title = element_blank(),
+        axis.text = element_text(size = 8),
+        legend.text = element_text(size = 7),
+        legend.key.size = unit(0.4, "lines"),
+        legend.position = c(0.35, 0.75),
+        legend.title = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill = "white"),
+        panel.border = element_rect(colour = "black", 
+                                    fill = NA, size = 0.5))
+
+# SP's main climate space plot
+p <- ggplot() +
+  geom_hex(data = map_mat_global,
+           aes(x = mat, y = map / 10), 
+           bins = 100, na.rm = TRUE) +
+  scale_fill_viridis_c(name = "Grid cells", begin = 0.85, end = 0) +
+  geom_point(data = cosore_points, 
+             aes(x = mat_cosore, y = map_cosore / 10),
+             color = "black", shape = 4, size = 1.5, na.rm = TRUE) +
+  theme_minimal() +
+  coord_cartesian(ylim = c(0, 500)) +
+  labs(x = "MAT (°C)", y = "MAP (cm)")
+
+# Inset the first inside the second
+library(cowplot, quietly = TRUE)
+ggdraw() +
+  draw_plot(p) +
+  draw_plot(p_inset, x = 0.1, y = 0.52, width = 0.4, height = 0.45)
+```
+
 # Fancier things
 
 Things we haven't talked about (with links)
@@ -266,6 +492,7 @@ Things we haven't talked about (with links)
 - Details about the theme system
 - Annotations
 - Animations
+- Swapping in new data to an existing plot 
 - Combining different plots in a larger figure
 
 # Resources
@@ -275,3 +502,4 @@ Things we haven't talked about (with links)
 - The book
 - Link to these slides
 - Link to repository
+- The Intermediate ggplot workshop slides (link)
