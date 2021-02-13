@@ -44,7 +44,7 @@ knitr::opts_chunk$set(echo = TRUE)
 **Goal: to be comfortable making basic reproducible documents.**
 
 
-## Assumptions
+# Assumptions
 
 <span style="color: red;">**We assume you're familiar with the basic mechanics of R:**</span>
 
@@ -69,6 +69,12 @@ So _not_ at this level :)
 General concepts of effective data visualization
 
 - Who is audience, what are you trying to communicate, etc.
+
+Data visualization can have [consequences](https://xkcd.com/523/)!
+
+![](https://imgs.xkcd.com/comics/decline.png)
+
+
 
 - Importance of accessibility
 
