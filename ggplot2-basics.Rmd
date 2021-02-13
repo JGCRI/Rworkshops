@@ -282,8 +282,6 @@ iris_plot + geom_violin()
 iris_plot + geom_dotplot()
 ```
 
-#### {-}
-
 
 ### Using multiple geoms
 
@@ -421,9 +419,100 @@ iris_plot + geom_point() +
 
 <img src="images-ggplot2/layers-2-themes.png" width = "100%">
 
-- can apply many pre-made themes
-- examples
-- more available online, e.g. xkcd theme
+ggplot's theme system is powerful and sometimes confusing. Like
+the rest of the ggplot system, it uses the idea of _inheritance_: you can apply themes, or aspects of them, to entire plots, sub-elements, or small details, and changes cascade down.
+
+The simplest step is to apply a theme to an entire plot:
+
+### Theme examples {.tabset}
+
+#### theme_gray
+
+```{r iris-theme1}
+iris_plot + geom_point() + theme_gray()
+```
+
+#### theme_dark
+
+```{r iris-theme4}
+iris_plot + geom_point() + theme_dark()
+```
+
+#### theme_minimal
+
+```{r iris-theme5}
+iris_plot + geom_point() + theme_minimal()
+```
+
+#### theme_cowplot
+
+_Many_ more themes are available in other R packages and online repositories:
+
+```{r iris-theme6, message=FALSE}
+library(cowplot)
+iris_plot + geom_point() + theme_cowplot()
+```
+
+#### theme_economist
+
+_Many_ more themes are available in other R packages and online repositories:
+
+```{r iris-theme7, message=FALSE, warning=FALSE}
+library(ggthemes)
+iris_plot + geom_point() + theme_economist()
+```
+
+### {-}
+
+The theming system is also how we change specific aspects of plots.
+
+### Theme inheritance {.tabset}
+
+Let's say we want to apply some formatting to text in our plot. But, _which_ text?
+
+#### All text
+
+```{r iris-texttheme1}
+iris_plot + geom_point() + 
+  theme(text = element_text(size = 20, color = "red")) 
+```
+
+#### Axis text
+
+```{r iris-texttheme2}
+iris_plot + geom_point() + 
+  theme(axis.text = element_text(size = 20, color = "red")) 
+```
+
+#### x axis text
+
+```{r iris-texttheme3}
+iris_plot + geom_point() + 
+  theme(axis.text.x = element_text(size = 20, color = "red")) 
+```
+
+#### Bottom x axis text
+
+```{r iris-texttheme4}
+iris_plot + geom_point() + 
+  theme(axis.text.x.bottom = element_text(size = 20, color = "red")) 
+```
+
+#### All titles
+
+```{r iris-texttheme5}
+iris_plot + geom_point() + 
+  theme(title = element_text(size = 20, color = "red")) 
+```
+
+### {-}
+
+We can do similar things with any other aspect of the plot: grid lines, legends, backgrounds, etc. From the [help page](https://ggplot2.tidyverse.org/reference/theme.html):
+
+>Theme elements inherit properties from other theme elements hierarchically. For example, `axis.title.x.bottom` inherits from `axis.title.x` which inherits from `axis.title`, which in turn inherits from `text`. **All text elements inherit directly or indirectly from `text`; all lines inherit from `line`, and all rectangular objects inherit from `rect`.** This means that you can modify the appearance of multiple elements by setting a single high-level component.
+
+**Interestingly** (I just realized this in preparing these slides) this seems to be wrong or at least incomplete: looking at the plots above, there's a fourth highest-level attribute, `title`, which isn't inheriting from `text`. I don't understand why not.
+
 
 ## Facets
 
@@ -442,7 +531,7 @@ This figure is from a [recent paper](https://onlinelibrary.wiley.com/doi/full/10
 
 <img src="images-ggplot2/figure3-climate-whittaker.png" width = "100%">
 
-This seems--and is--complex, but you now have the tools to see what's happening in the code that generates the figure.
+This seems---and is---complex, but you now have the tools to see what's happening in the code that generates the figure.
 
 ```{r, eval=FALSE}
 # Whittaker biome plot
@@ -495,6 +584,9 @@ Things we haven't talked about (with links)
 - Animations
 - Swapping in new data to an existing plot 
 - Combining different plots in a larger figure
+
+Some of these are built into `ggplot2`; but there's also a whole
+ecosystem of extension packages that people have written.
 
 # Resources
 
