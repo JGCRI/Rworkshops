@@ -25,7 +25,7 @@ knitr::opts_chunk$set(echo = TRUE)
 * Review and practice central aesthetics, geoms, smoother sections
 * Make feedback google form
 
-## Topics {data-background=#cceeff}
+# Topics
 
 * Data visualization concepts
 * A grammar of graphics
@@ -38,7 +38,7 @@ knitr::opts_chunk$set(echo = TRUE)
 * Fancier things
 * Resources
 
-**Goal: to be comfortable making basic reproducible documents.**
+**Goal: understand the principles that ggplot is built on, and the steps needed to create a wide variety of basic plots.**
 
 
 # Assumptions
@@ -104,7 +104,7 @@ Let's plot two of its columns against each other, coloring by species:
 plot(iris$Sepal.Length, iris$Sepal.Width, col = iris$Species)
 legend(7, 4.3, 
        unique(iris$Species),
-       col=1:length(iris$Species), 
+       col = 1:length(iris$Species), 
        pch = 1)
 ```
 
@@ -412,7 +412,7 @@ of [local regression](https://en.wikipedia.org/wiki/Local_regression)
 * This is noted in the diagnostic message printed by `geom_smooth` 
 * `geom_smooth` inherited the plot aesthetics (x, y, color), so it fit separately to each color (group of data)
 
-More likely, we would like a simple linear regression---i.e., trend lines. We just need to override the default and tell is to use R's [lm](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/lm) function:
+More likely, we would like a simple linear regression---i.e., trend lines. For this we just need to override the default and tell is to use R's [lm](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/lm) function:
 
 ```{r iris-smooth2, message=FALSE}
 iris_plot + geom_point() + geom_smooth(method = "lm")
@@ -614,6 +614,30 @@ tx_housing + scale_color_viridis_d()
 The [RColorBrewer](https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf) package is another good option worth looking into.
 
 
+# Using and saving plots
+
+Note that `ggplot()` objects are just like any other R object, and can be printed (displaying the plot), passed to functions, saved to disk, etc.
+
+The primary way to save a _plot image_ is the `ggsave()` function:
+
+```{r, eval=FALSE}
+p <- ggplot(cars, aes(speed, dist)) + geom_point()
+print(p)
+ggsave("cars_plot.pdf")
+
+# You can specify file types and dimensions:
+q <- ggplot(iris, aes(Sepal.Length)) + geom_histogram()
+print(q)
+ggsave("iris_plot.png", width = 8, height = 5)
+
+# By default ggsave assumes you mean "save the last plot generated"
+# but you can save arbitrary objects:
+ggsave("cars_plot.jpg", plot = p + theme_bw())
+```
+
+<img src="images-ggplot2/saved-plots.png" width = "75%">
+
+
 # A complicated example
 
 This figure is from a [recent paper](https://onlinelibrary.wiley.com/doi/full/10.1111/gcb.15353) we published with many co-authors in GCB:
@@ -664,17 +688,19 @@ ggdraw() +
 
 # Fancier things
 
-Things we haven't talked about (with links)
+This workshop has covered a lot of ground, which it's skipped over and/or fudged
+some things for clarity and time.
+
+Important things we haven't talked about include:
 
 - Statistical transformations
-- Coordinate system changes
+- Scales and coordinate systems
 - Details about the theme system
-- Annotations
-- Animations
+- Plotting dates, maps, animations
 - Swapping in new data to an existing plot 
 - Combining different plots in a larger figure
 
-Some of these are built into ggplot2; but there's also a whole
+Some of these are built into ggplot2, but there's also a whole
 ecosystem of extension packages that people have written.
 
 
@@ -684,8 +710,8 @@ ecosystem of extension packages that people have written.
 
 <img src="images-ggplot2/evolution.png" width = "100%">
 
-- Cheat sheets
-- The ggplot2 online help: https://ggplot2.tidyverse.org/reference/
+- RStudio ggplot2 [cheat sheet](https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+- The ggplot2 [online help](https://ggplot2.tidyverse.org/reference/)
 - The book
 - Link to these slides
 - Link to repository
