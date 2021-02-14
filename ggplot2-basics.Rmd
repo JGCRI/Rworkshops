@@ -712,7 +712,8 @@ ecosystem of extension packages that people have written.
 
 - RStudio ggplot2 [cheat sheet](https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
 - The ggplot2 [online help](https://ggplot2.tidyverse.org/reference/)
-- The book
+- The grammar of graphics [paper](https://vita.had.co.nz/papers/layered-grammar.pdf)
+- The ggplot2 [book](https://ggplot2-book.org/)
 - Link to these slides
 - Link to repository
 - The Intermediate ggplot workshop slides (link)
