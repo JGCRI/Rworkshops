@@ -21,12 +21,9 @@ knitr::opts_chunk$set(echo = TRUE)
 * The ggplot2 package
 * The dataset - brief
 * The ggplot call - finish
-* Need to show examples of geoms that compute something (e.g. boxplot, density)
-* Labels - finish
 * Facets
-* Accessibility
 * Review and practice central aesthetics, geoms, smoother sections
-
+* Make feedback google form
 
 ## Topics {data-background=#cceeff}
 
@@ -89,13 +86,17 @@ plot(cars)
 
 That seems pretty good! What's the problem?
 
-Well, what about `iris`? This is a [famous](https://rpubs.com/AjinkyaUC/Iris_DataSet) dataset:
+Well, what about `iris`? This is a [famous](https://rpubs.com/AjinkyaUC/Iris_DataSet) dataset; from the help (`?iris`):
+
+>This famous (Fisher's or Anderson's) iris data set gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. The species are _Iris setosa_, _versicolor_, and _virginica_.
+
+<img src="images-ggplot2/iris.png" width = "100%">
 
 ```{r show-iris, warning=FALSE}
 iris
 ```
 
-<img src="images-ggplot2/iris.png" width = "100%">
+**Note that each row of `iris` is an _individual flower_; there are four observations per row.** We'll come back to this structural point later.
 
 Let's plot two of its columns against each other, coloring by species:
 
@@ -160,13 +161,16 @@ We're going to walk through these layers, one by one.
 The first (or in back-to-front numbering, as in the image above,
 the seventh) step involves our data.
 
-- Implications for how we structure our data (long versus wide)
+As noted above, the _structure_ of our data has implications for how we plot it; more precisely, to effectively use ggplot2 we want our data to be structured a certain way. But again `r `library(emo); emo::ji("smile")` let's come back to that point.
+
+Generally, our data for plotting should be in **tabular** format, with rows and named columns. In R this is typically a `data.frame` or a `tibble`.
+
 
 ## The ggplot call
 
 <img src="images-ggplot2/layers-6-ggplot.png" width = "100%">
 
-Let's call `ggplot()` using the iris dataset!
+Hey, `iris` is a data frame. Let's call `ggplot()` on it!
 
 ```{r ggplot-call, warning=FALSE}
 library(ggplot2)
@@ -175,13 +179,15 @@ ggplot(iris)
 
 Well, that was disappointing.
 
-Remember how easy `plot(cars)` was above...why didn't anything happen here? Well, ggplot doesn't know how to map our plot _aesthetics_ to our _data_, and it doesn't know what _geom_ to use for subsequent visualization.
+Remember how easy `plot(cars)` was above...why didn't anything happen here? Well, `ggplot()` doesn't know how to map our plot _aesthetics_ to our _data_, and it doesn't know what _geom_ to use for subsequent visualization.
 
 ## Aesthetics mapping
 
 <img src="images-ggplot2/layers-5-aesthetics.png" width = "100%">
 
 The aesthetics mapping
+
+TODO TODO TODO
 
 ## Interlude: data structure
 
@@ -214,12 +220,6 @@ With this reshaping, we can map an _aesthetic_ to a _column_.
 
 **QUESTION.** Which columns are likely candidates for aesthetics? Why? 
 
-```{r}
-iris_plot <- ggplot(iris_long, aes(x = Sepal, 
-                                   y = Petal, 
-                                   color = Species))
-```
-
 ## Geoms
 
 <img src="images-ggplot2/layers-4-geoms.png" width = "100%">
@@ -248,11 +248,17 @@ legend(7, 4.3,
 
 ### {-}
 
-Now the advantages of ggplot2 and the grammar-of-graphics approach start to get very clear.
+Now the advantages of ggplot2 and the grammar-of-graphics approach start to get clear.
 
 ### Same data, different geoms {.tabset}
 
 Geoms have different aesthetic requirements, and not every geom works with every dataset (visually or computationally): 
+
+```{r}
+iris_plot <- ggplot(iris_long, aes(x = Sepal, 
+                                   y = Petal, 
+                                   color = Species))
+```
 
 #### geom_point
 
@@ -380,7 +386,7 @@ There's also a useful `annotate()` function; see its documentation.
 
 ### What geom should I use?
 
-
+TODO TODO TODO
 
 ## Smoothers and models
 
@@ -414,7 +420,7 @@ iris_plot + geom_point() + geom_smooth(method = "lm")
 
 We might also want to fit an _overall_ trend line, to the pooled data (i.e.,
 without groups). You might be tempted in this case to override the
-color aesthetic to a constant value This works, but it's not ideal. Better:
+color aesthetic to a constant value. This works, but it's not ideal. Better:
 
 ```{r iris-smooth3, message=FALSE}
 iris_plot + geom_point() + 
@@ -449,7 +455,7 @@ Labeling your plots well is [important](https://xkcd.com/833/).
 
 ![](https://imgs.xkcd.com/comics/convincing.png)
 
-As we've seen, ggplot takes its default axis and aesthetic labels from the columns you specify. These are easy to change using the `xlab` and `ylab` functions; the `ggtitle` function is available as well:
+As we've seen, ggplot2 takes its default axis and aesthetic labels from the columns you specify. These are easy to change using the `xlab` and `ylab` functions; the `ggtitle` function is available as well:
 
 ```{r iris-labels, message=FALSE}
 iris_plot + geom_point() + 
@@ -463,7 +469,7 @@ iris_plot + geom_point() +
 
 <img src="images-ggplot2/layers-2-themes.png" width = "100%">
 
-ggplot's theme system is powerful and sometimes confusing. Like
+ggplot2's theme system is powerful and sometimes confusing. Like
 the rest of the ggplot system, it uses the idea of _inheritance_: you can apply themes, or aspects of them, to entire plots, sub-elements, or small details, and changes cascade down.
 
 The simplest step is to apply a theme to an entire plot:
@@ -562,7 +568,7 @@ We can do similar things with any other aspect of the plot: grid lines, legends,
 
 >Theme elements inherit properties from other theme elements hierarchically. For example, `axis.title.x.bottom` inherits from `axis.title.x` which inherits from `axis.title`, which in turn inherits from `text`. **All text elements inherit directly or indirectly from `text`; all lines inherit from `line`, and all rectangular objects inherit from `rect`.** This means that you can modify the appearance of multiple elements by setting a single high-level component.
 
-**Interestingly** (I just realized this in preparing these slides) this seems to be wrong or at least incomplete? I don't understand why `axis.text` isn't inheriting from `text` (which is what the documentation says). `r library(emo); emo::ji("shrug")`
+**Interestingly** (I just realized this in preparing these slides) this seems to be wrong or at least incomplete? I don't understand why `axis.text` isn't inheriting from `text` (which is what the documentation says). `r emo::ji("shrug")`
 
 
 ## Facets
@@ -668,7 +674,7 @@ Things we haven't talked about (with links)
 - Swapping in new data to an existing plot 
 - Combining different plots in a larger figure
 
-Some of these are built into `ggplot2`; but there's also a whole
+Some of these are built into ggplot2; but there's also a whole
 ecosystem of extension packages that people have written.
 
 # Resources
