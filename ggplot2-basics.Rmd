@@ -475,7 +475,7 @@ As we've seen, ggplot2 takes its default axis and aesthetic labels from the colu
 
 ```{r iris-labels, message=FALSE}
 iris_plot + geom_point() + 
-  geom_smooth(method = "lm") +
+  geom_smooth() +
   xlab("What is a sepal again?") +
   ylab("Petal (cm)") +
   ggtitle("This is starting to look like a real plot!")
@@ -706,8 +706,8 @@ ggdraw() +
 
 # Fancier things
 
-This workshop has covered a lot of ground, which it's skipped over and/or fudged
-some things for clarity and time.
+This workshop has covered a lot of ground, and necessarily skipped over and/or fudged
+some concepts for clarity and time.
 
 Important things we haven't talked about include:
 
@@ -732,6 +732,9 @@ ecosystem of extension packages that people have written.
 - The ggplot2 [online help](https://ggplot2.tidyverse.org/reference/)
 - The grammar of graphics [paper](https://vita.had.co.nz/papers/layered-grammar.pdf)
 - The ggplot2 [book](https://ggplot2-book.org/)
-- Link to these slides
-- Link to repository
-- The Intermediate ggplot workshop slides (link)
+
+This presentation was written in [R Markdown](https://rmarkdown.rstudio.com).
+
+- The presentation in html format is [here](link TODO)
+- The repository is [here](https://github.com/JGCRI/Rworkshops)
+- The Intermediate ggplot workshop slides (link TODO)
