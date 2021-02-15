@@ -15,17 +15,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library(emo)  # install via devtools::install_github("hadley/emo")
 ```
 
-<span style="color: red;">**TO DO LIST:**</span>
-
-* Data visualization section - general principles
-* Grammar of graphics
-* The ggplot2 package
-* The dataset - brief
-* The ggplot call - finish
-* Facets
-* Review and practice central aesthetics, geoms, smoother sections
-* Make feedback google form
-
 # Topics
 
 * Data visualization concepts
@@ -204,6 +193,7 @@ ggplot(iris)
 Well, that was disappointing.
 
 Remember how easy `plot(cars)` was above...why didn't anything happen here? Well, `ggplot()` doesn't know how to map our plot _aesthetics_ to our _data_, and it doesn't know what _geom_ to use for subsequent visualization.
+
 
 ## 5. Aesthetics mapping
 
@@ -407,6 +397,8 @@ boxplot-only plot **is highly deceptive**: there are two groups of data here
 (two dimensions that were measured), and you probably wouldn't want to present
 them combined together.
 
+Remember one of the 10 data visualization principles [above](#dataviz): **visualize your _data_, not just summaries!**
+
 
 ### Data-less geoms
 
@@ -426,6 +418,7 @@ iris_plot +
 
 There's also a useful `annotate()` function; see its documentation.
 
+
 ### What geom should I use?
 
 The question here is really: *_what are you trying to communicate?_*
@@ -439,6 +432,7 @@ The question here is really: *_what are you trying to communicate?_*
 | understand distribution of data                   | `geom_point` `geom_hex` `geom_histogram` | 
 | analyze trends                                    | `geom_smooth` `geom_line`                |
 | understand the relationship between data columns  | `geom_boxplot`                           |
+
 
 ### Smoothers and models
 
@@ -499,6 +493,7 @@ ggplot(iris_long, aes(Sepal, Petal)) +
   geom_smooth(method = "lm", formula = y ~ poly(x, 2), color = "red")    
 ```
 
+
 ## 3. Labels
 
 <img src="images-ggplot2/layers-3-labels.png" width = "100%">
@@ -516,6 +511,7 @@ iris_plot + geom_point() +
   ylab("Petal (cm)") +
   ggtitle("This is starting to look like a real plot!")
 ```
+
 
 ## 2. Themes
 
@@ -634,6 +630,8 @@ Facets are multi-panel plots that show different _subsets_ of a data frame. They
 
 ### Faceting examples {.tabset}
 
+**Which of these is the best visualization? Why?**
+
 #### None
 
 ```{r iris-facetwrap0}
@@ -671,7 +669,9 @@ At a minimum, be aware that some of the default colors in ggplot2 have equal [lu
 
 We can change colors and palettes, however; for example, the [Viridis](https://www.thinkingondata.com/something-about-viridis-library/) color scales included with ggplot2 are designed to be perceptually uniform in both color and black-and-white. They are also designed to be perceived by viewers with common forms of color blindness.
 
-Use `viridsd()` with discrete data...
+Use `viridsd()` with discrete data, and `viridisc()` with continuous data.
+
+The [RColorBrewer](https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf) package is another good option worth looking into.
 
 ```{r, txhousing0, echo=FALSE}
 txsamp <- subset(txhousing, city %in%
@@ -691,12 +691,6 @@ tx_housing  # down-sampled from the "txhousing" dataset
 ```{r txhousing2}
 tx_housing + scale_color_viridis_d()
 ```
-
-# {-}
-
-...and `viridisc()` with continuous data.
-
-The [RColorBrewer](https://cran.r-project.org/web/packages/RColorBrewer/RColorBrewer.pdf) package is another good option worth looking into.
 
 
 # Using and saving plots
