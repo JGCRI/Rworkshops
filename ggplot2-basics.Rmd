@@ -59,7 +59,7 @@ So _not_ at this level :)
 * You have the [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html) package installed
 
 
-# Data visualization
+# Data visualization {#dataviz}
 
 Visualizing data is [critical](https://towardsdatascience.com/a-comprehensive-guide-to-the-grammar-of-graphics-for-effective-visualization-of-multi-dimensional-1f92b4ed4149):
 
@@ -209,13 +209,16 @@ Remember how easy `plot(cars)` was above...why didn't anything happen here? Well
 
 <img src="images-ggplot2/layers-5-aesthetics.png" width = "100%">
 
-The aesthetics mapping
+As we said above, the _aesthetics_ of each layer in our plot can either be
+* constant, or
+* mapped to a column of data
 
-TODO TODO TODO
+Inverting this statement means that
+* Any non-constant aesthetic has to be _its own column_ in the data 
 
-## 4.5 Interlude: data structure
+This idea of mapping aesthetics to columns thus has implications for our the _structure_ of our data.
 
-This idea of mapping aesthetics to variables has implications for our data structure.
+## Interlude: data structure
 
 Remember what `iris` looks like:
 
@@ -238,9 +241,14 @@ observation; specifically:
 
 ### Long (tidy) data
 
-With all this in mind, it's clear we need to _reshape_ our data.
+With all this in mind, it's clear we need to _reshape_ our data. Let's assume,
+for the rest of this workshop, that we're particularly interested in comparing
+observations of _petals_ versus those of _sepals_:
 
 ```{r}
+# Here we use base R's "reshape" function
+# There are many alternatives; in particular, check out
+# the powerful "tidyr" package
 iris_long <- reshape(iris, 
                      varying = c("Sepal.Length", 
                                  "Sepal.Width",
@@ -253,7 +261,7 @@ iris_long
 
 **Note that this is _not_ strictly "tidy data", per the definition above. Why not?**
 
-With this reshaping, we can map an _aesthetic_ to a _column_.
+With this reshaping, we can proceed to map _aesthetics_ to _columns_.
 
 
 ## 4. Geoms
@@ -421,6 +429,8 @@ There's also a useful `annotate()` function; see its documentation.
 ### What geom should I use?
 
 The question here is really: *_what are you trying to communicate?_*
+
+(See notes under Data visualization section [above](#dataviz).)
 
 | If you want to...                                 | ...try this geom                         |
 | --------------------------------------------------|------------------------------------------|
@@ -615,19 +625,45 @@ We can do similar things with any other aspect of the plot: grid lines, legends,
 
 ## 1. Facets
 
-Facets are multi-panel plots that show different _subsets_ of a data frame. They work best on discrete variables and can help clear up a busy plot.
-
-- `facet_grid` is a more rigid n x n matrix and best used with multiple variables
-- `facet_wrap` is a long ribbon of panels that can be **wrapped** into any number of columns using `ncol` and best used with a single variable
-
 <img src="images-ggplot2/layers-1-facets.png" width = "100%">
 
-```{r iris-facetwrap}
+Facets are multi-panel plots that show different _subsets_ of a data frame. They work best on discrete variables and can help clear up a busy plot.
+
+- `facet_grid` is a rigid m x n matrix and best used with multiple variables
+- `facet_wrap` is a long ribbon of panels that can be **wrapped** into any number of columns using `ncol` and best used with a single variable
+
+### Faceting examples {.tabset}
+
+#### None
+
+```{r iris-facetwrap0}
+iris_plot + geom_point()
+```
+
+#### by `Species`
+
+```{r iris-facetwrap1}
 iris_plot + geom_point() + facet_wrap(~Species)
 ```
 
+#### by `dimension`
+
+```{r iris-facetwrap2}
+iris_plot + geom_point() + facet_wrap(~dimension)
+```
+
+#### by both
+
+```{r iris-facetwrap3}
+iris_plot + geom_point() + facet_grid(Species ~ dimension)
+```
+
+### {-}
+
+At this point, we've pretty much arrived at our final plot!
 
 <img src="images-ggplot2/layers-final-plot.png" width = "100%">
+
 
 # Accessibility {.tabset}
 
