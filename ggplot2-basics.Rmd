@@ -143,7 +143,7 @@ We are learning about (a subset of) these steps today.
 
 # Steps to a ggplot2 plot
 
-Say we have a plot we want to make, a slightly more complicated version of Wickham (2010 Figure 2 above:
+Say we have a plot we want to make, a slightly more complicated version of Wickham (2010) Figure 2 above:
 
 <img src="images-ggplot2/layers-final-plot.png" width = "100%">
 
@@ -158,7 +158,7 @@ Visually:
 
 We're going to walk through these layers, one by one.
 
-## The dataset
+## 7. The dataset
 
 <img src="images-ggplot2/layers-7-data.png" width = "100%">
 
@@ -170,7 +170,7 @@ As noted above, the _structure_ of our data has implications for how we plot it;
 Generally, our data for plotting should be in **tabular** format, with rows and named columns. In R this is typically a `data.frame` or a `tibble`.
 
 
-## The ggplot call
+## 6. The ggplot call
 
 <img src="images-ggplot2/layers-6-ggplot.png" width = "100%">
 
@@ -185,7 +185,7 @@ Well, that was disappointing.
 
 Remember how easy `plot(cars)` was above...why didn't anything happen here? Well, `ggplot()` doesn't know how to map our plot _aesthetics_ to our _data_, and it doesn't know what _geom_ to use for subsequent visualization.
 
-## Aesthetics mapping
+## 5. Aesthetics mapping
 
 <img src="images-ggplot2/layers-5-aesthetics.png" width = "100%">
 
@@ -193,7 +193,7 @@ The aesthetics mapping
 
 TODO TODO TODO
 
-## Interlude: data structure
+## 4.5 Interlude: data structure
 
 This idea of mapping aesthetics to variables has implications for our data structure.
 
@@ -236,7 +236,7 @@ iris_long
 With this reshaping, we can map an _aesthetic_ to a _column_.
 
 
-## Geoms
+## 4. Geoms
 
 <img src="images-ggplot2/layers-4-geoms.png" width = "100%">
 
@@ -261,8 +261,6 @@ legend(7, 4.3,
        col=1:length(iris$Species), 
        pch = 1)
 ```
-
-### {-}
 
 Now the advantages of ggplot2 and the grammar-of-graphics approach start to get clear.
 
@@ -402,9 +400,17 @@ There's also a useful `annotate()` function; see its documentation.
 
 ### What geom should I use?
 
-TODO TODO TODO
+The question here is really: *_what are you trying to communicate?_*
 
-## Smoothers and models
+| If you want to...                                 | ...try this geom                         |
+| --------------------------------------------------|------------------------------------------|
+| show comparison                                   | `geom_bar` `geom_line`                   |
+| show composition                                  | `geom_violin` `geom_density`             |
+| understand distribution of data                   | `geom_point` `geom_hex` `geom_histogram` | 
+| analyze trends                                    | `geom_smooth` `geom_line`                |
+| understand the relationship between data columns  | `geom_boxplot`                           |
+
+### Smoothers and models
 
 This is really an extension of the section on geoms above. Let's go back
 to our basic `iris` plot:
@@ -463,7 +469,7 @@ ggplot(iris_long, aes(Sepal, Petal)) +
   geom_smooth(method = "lm", formula = y ~ poly(x, 2), color = "red")    
 ```
 
-## Labels
+## 3. Labels
 
 <img src="images-ggplot2/layers-3-labels.png" width = "100%">
 
@@ -481,7 +487,7 @@ iris_plot + geom_point() +
   ggtitle("This is starting to look like a real plot!")
 ```
 
-## Themes
+## 2. Themes
 
 <img src="images-ggplot2/layers-2-themes.png" width = "100%">
 
@@ -587,14 +593,19 @@ We can do similar things with any other aspect of the plot: grid lines, legends,
 **Interestingly** (I just realized this in preparing these slides) this seems to be wrong or at least incomplete? I don't understand why `axis.text` isn't inheriting from `text` (which is what the documentation says). `r emo::ji("shrug")`
 
 
-## Facets
+## 1. Facets
 
-TODO TODO TODO
+Facets are multi-panel plots that show different _subsets_ of a data frame. They work best on discrete variables and can help clear up a busy plot.
+
+- `facet_grid` is a more rigid n x n matrix and best used with multiple variables
+- `facet_wrap` is a long ribbon of panels that can be **wrapped** into any number of columns using `ncol` and best used with a single variable
 
 <img src="images-ggplot2/layers-1-facets.png" width = "100%">
 
-- facet_wrap
-- facet_grid
+```{r iris-facetwrap}
+iris_plot + geom_point() + facet_wrap(~Species)
+```
+
 
 <img src="images-ggplot2/layers-final-plot.png" width = "100%">
 
