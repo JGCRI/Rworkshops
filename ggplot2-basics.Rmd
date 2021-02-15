@@ -12,6 +12,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(emo)  # install via devtools::install_github("hadley/emo")
 ```
 
 <span style="color: red;">**TO DO LIST:**</span>
@@ -60,18 +61,37 @@ So _not_ at this level :)
 
 # Data visualization
 
-- Visualizing data is critical! 
-    example from https://towardsdatascience.com/a-comprehensive-guide-to-the-grammar-of-graphics-for-effective-visualization-of-multi-dimensional-1f92b4ed4149
-   
-General concepts of effective data visualization
+Visualizing data is [critical](https://towardsdatascience.com/a-comprehensive-guide-to-the-grammar-of-graphics-for-effective-visualization-of-multi-dimensional-1f92b4ed4149):
 
-- Who is audience, what are you trying to communicate, etc.
+![](https://miro.medium.com/max/600/1*W--cGoA3_n2ZlU6Xs4o2iQ.gif)
 
-Data visualization can have [consequences](https://xkcd.com/523/)!
+**The x and y mean, standard deviation, and x-y correlation are unchanged throughout this animation.**
+
+Another example of this is [Anscombe's Quartet](https://en.wikipedia.org/wiki/Anscombe%27s_quartet):
+
+<img src="images-ggplot2/638px-Anscombe's_quartet_3.svg.png" width = "100%">
+
+**All four of _these_ datasets have identical `mean(x)`, `mean(y)`, `var(x)`, `var(y)`, `cor(x, y)`, and regression (intercept, slope, r-squared).**  `r emo::ji("exploding_head")`
+
+Lots of research has been done on effective data visualization with respect to science communication. Read a bit of it. [For example](https://www.sciencedirect.com/science/article/pii/S2666389920301896) here are one author's ten principles of effective data visualization:
+
+* Diagram First: identify the information you want to share
+* **Use the Right Software**
+* **Use an Effective Geometry and Show Data**
+* **Colors _Always_ Mean Something**
+* Include Uncertainty
+* **Panel, when Possible**
+* Data and Models Are Different Things
+* Simple Visuals, Detailed Captions
+* Consider an Infographic
+* Get an Opinion
+
+To these I would only add "know your audience".
+
+Remember, data visualization can have [consequences](https://xkcd.com/523/)!
 
 ![](https://imgs.xkcd.com/comics/decline.png)
 
-- Importance of accessibility
 
 ## Plotting in base R
 
@@ -165,7 +185,7 @@ We're going to walk through these layers, one by one.
 The first (or in back-to-front numbering, as in the image above,
 the seventh) step involves our data.
 
-As noted above, the _structure_ of our data has implications for how we plot it; more precisely, to effectively use ggplot2 we want our data to be structured a certain way. But again `r library(emo); emo::ji("smile")` let's come back to that point.
+As noted above, the _structure_ of our data has implications for how we plot it; more precisely, to effectively use ggplot2 we want our data to be structured a certain way. But again `r emo::ji("smile")` let's come back to that point.
 
 Generally, our data for plotting should be in **tabular** format, with rows and named columns. In R this is typically a `data.frame` or a `tibble`.
 
