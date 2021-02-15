@@ -165,7 +165,7 @@ We're going to walk through these layers, one by one.
 The first (or in back-to-front numbering, as in the image above,
 the seventh) step involves our data.
 
-As noted above, the _structure_ of our data has implications for how we plot it; more precisely, to effectively use ggplot2 we want our data to be structured a certain way. But again `r `library(emo); emo::ji("smile")` let's come back to that point.
+As noted above, the _structure_ of our data has implications for how we plot it; more precisely, to effectively use ggplot2 we want our data to be structured a certain way. But again `r library(emo); emo::ji("smile")` let's come back to that point.
 
 Generally, our data for plotting should be in **tabular** format, with rows and named columns. In R this is typically a `data.frame` or a `tibble`.
 
@@ -205,6 +205,17 @@ iris
 
 This is problematic. What if we wanted an aesthetic like `color` to depend on what dimension or organ we're measuring?
 
+**`iris` is structured in a form convenient for humans, but not one
+particularly handy for computers.**
+
+In general it's best to start with your data in ["tidy" form](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html), a.k.a. long form,
+when preparing to use ggplot2. This means that every row contains exactly **one**
+observation; specifically:
+
+* Each _variable_ forms a column.
+* Each _observation_ forms a row.
+* Each type of observational unit forms a table.
+
 ### Long (tidy) data
 
 With all this in mind, it's clear we need to _reshape_ our data.
@@ -220,9 +231,10 @@ iris_long <- reshape(iris,
 iris_long
 ```
 
+**Note that this is _not_ strictly "tidy data", per the definition above. Why not?**
+
 With this reshaping, we can map an _aesthetic_ to a _column_.
 
-**QUESTION.** Which columns are likely candidates for aesthetics? Why? 
 
 ## Geoms
 
@@ -576,6 +588,8 @@ We can do similar things with any other aspect of the plot: grid lines, legends,
 
 
 ## Facets
+
+TODO TODO TODO
 
 <img src="images-ggplot2/layers-1-facets.png" width = "100%">
 
