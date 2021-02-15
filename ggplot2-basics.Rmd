@@ -711,9 +711,8 @@ some concepts for clarity and time.
 
 Important things we haven't talked about include:
 
-- Statistical transformations
-- Scales and coordinate systems
-- Details about the theme system
+- **Statistical transformations**
+- **Scales and coordinate systems**
 - Plotting dates, maps, animations
 - Swapping in new data to an existing plot 
 - Combining different plots in a larger figure
