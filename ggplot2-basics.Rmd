@@ -71,11 +71,9 @@ Data visualization can have [consequences](https://xkcd.com/523/)!
 
 ![](https://imgs.xkcd.com/comics/decline.png)
 
-
-
 - Importance of accessibility
 
-## R plotting pre-ggplot2
+## Plotting in base R
 
 One of the simplest datasets included with R is `cars`:
 
@@ -115,14 +113,22 @@ This is a bunch of code for such a simple plot; note that:
 * The legend is _totally disconnected_ from the plot: we have to do everything (color
 assignment, etc.) manually
 
-Things quickly gets worse if we want more complexity or features.
+Things quickly gets worse if we want more complexity or features. What's the underlying pproblem?
+
+>Without a grammar, there is no underlying theory, so most graphics packages are just a big collection of special cases. 
+
+From the [ggplot2 book](https://ggplot2-book.org/introduction.html).
 
 
 # A grammar of graphics
 
-- Origin
+Above we made some scatterplots, perhaps the simplest graph type.
 
-- Idea of mapping aesthetics
+>What precisely is a scatterplot? You have seen many before and have probably even drawn some by hand. A scatterplot represents each observation as a point, positioned according to the value of two variables. As well as a horizontal and vertical position, each point also has a size, a colour and a shape. These attributes are called aesthetics, and are the properties that can be perceived on the graphic. Each aesthetic can be mapped to a variable, or set to a constant value.
+
+<img src="images-ggplot2/wickham-2010.png" width = "100%">
+
+This insight had been made before Hadley Wickham's [original paper](https://vita.had.co.nz/papers/layered-grammar.pdf), but in the context of R it laid the ground for ggplot2:
 
 >To be precise, the layered grammar defines the components of a plot as:
 >
@@ -132,14 +138,12 @@ Things quickly gets worse if we want more complexity or features.
 >* a coordinate system,
 >* the facet specification.
 
-From Hadley's book https://vita.had.co.nz/papers/layered-grammar.pdf
-
-# The `ggplot2` package
+We are learning about (a subset of) these steps today.
 
 
 # Steps to a ggplot2 plot
 
-We have a plot we want to make:
+Say we have a plot we want to make, a slightly more complicated version of Wickham (2010 Figure 2 above:
 
 <img src="images-ggplot2/layers-final-plot.png" width = "100%">
 
