@@ -266,7 +266,7 @@ Compare the ggplot2 code to the base R code we saw earlier:
 
 ```{r iris-plot-ggplot}
 ggplot(iris) + 
-  aes(Sepal.Length, Sepal.Width, color = Species) + 
+  aes(x = Sepal.Length, y = Sepal.Width, color = Species) + 
   geom_point()
 ```
 
