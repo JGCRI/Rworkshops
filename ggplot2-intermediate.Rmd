@@ -7,7 +7,7 @@ output:
     df_print: paged
     toc: true
     toc_float: true
-    code_folding: show
+    code_folding: hide
 ---
 
 The introductory workshop material is here: [Part 1](https://rpubs.com/bpbond/727254), [Part 2](https://rpubs.com/bpbond/727256).
@@ -121,9 +121,9 @@ In addition to using built-in functions like `mean` that return a single value, 
 
 >`fun.data`: A function that is given the complete data and should return a data frame with variables ymin, y, and ymax.
 
-**Starting from the code above, write a custom summary function to produce the following graph with a single `geom_pointrange`:**
+**Starting from the code above, write a custom summary function to produce the following graph:**
 
-```{r, echo=FALSE}
+```{r exercise-stat-summary, echo=FALSE}
 my_smry <- function(y) { 
   ysd <- sd(y, na.rm = TRUE)
   ymn <- mean(y, na.rm = TRUE)
@@ -134,7 +134,17 @@ ggplot(mpg, aes(class, hwy, color = displ)) +
   geom_jitter() + 
   geom_pointrange(stat = "summary", fun.data = "my_smry", color = "red")
 ```
+```{r, eval=FALSE}
+my_smry <- function(y) { 
+  ysd <- sd(y, na.rm = TRUE)
+  ymn <- mean(y, na.rm = TRUE)
+  data.frame(y = ymn, ymin = ymn - ysd, ymax = ymn + ysd)
+}
 
+ggplot(mpg, aes(class, hwy, color = displ)) + 
+  geom_jitter() + 
+  geom_pointrange(stat = "summary", fun.data = "my_smry", color = "red")
+```
 
 # Scales
 
