@@ -1,0 +1,42 @@
+---
+title: "Data visualization using ggplot2 (intermediate)"
+author: "BBL"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_float: true
+    code_folding: show
+---
+
+The introductory workshop material is here: [Part 1](https://rpubs.com/bpbond/727254), [Part 2](https://rpubs.com/bpbond/727256).
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(emo)  # install via devtools::install_github("hadley/emo")
+```
+
+# Topics
+
+* The _real_ ggplot2 pipeline
+* The relationship between stats and geoms
+* Scales
+* Coordinate transformations
+
+
+**Goal: .**
+
+
+# Assumptions
+
+<span style="color: red;">**We assume you're familiar with the basic mechanics of ggplot2**</span> as covered in the introductory workshop:
+
+* Data visualization concepts
+* Grammar of graphics
+* Building a plot: dataset structure, `ggplot()`, aesthetics, geoms, labels, themes, facets
+* Aesthetic and theme inheritance principles
+
+
+
+
