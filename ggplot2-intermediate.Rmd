@@ -49,32 +49,13 @@ TODO
 
 We think of geoms as layers, and that's usually true, what actually makes up a _plot layer_?
 
-## A mapping
+* An optional **mapping** of aesthetics that supplements or overrides the default mapping set in `ggplot()`
+* An optional **dataset** that overrides the default plot dataset
+* A **geom**: the geometric object used to draw each observation
+* A **stat**: the statistical transformation to use (even if it's only the “identity” stat)
+* A **position** used to adjust overlapping objects
 
-A set of aesthetic mappings, specified using the aes() function and combined with the plot defaults as described in Section 14.4. If NULL, uses the default mapping set in ggplot().
-
-## A dataset
-
-A dataset which overrides the default plot dataset. It is usually omitted (set to NULL), in which case the layer will use the default data specified in ggplot(). The requirements for data are explained in more detail in Section 14.3.
-
-## A geom
-
-The name of the geometric object to use to draw each observation. Geoms are discussed in more detail in Section 14.3, and Chapters 3 and 4 explore their use in more depth.
-
-Geoms can have additional arguments. All geoms take aesthetics as parameters. If you supply an aesthetic (e.g. colour) as a parameter, it will not be scaled, allowing you to control the appearance of the plot, as described in Section 14.4.2. You can pass params in ... (in which case stat and geom parameters are automatically teased apart), or in a list passed to geom_params.
-
-## A stat
-
-The name of the statistical tranformation to use. A statistical transformation performs some useful statistical summary, and is key to histograms and smoothers. To keep the data as is, use the “identity” stat. Learn more in Section 14.6.
-
-You only need to set one of stat and geom: every geom has a default stat, and every stat a default geom.
-
-Most stats take additional parameters to specify the details of statistical transformation. You can supply params either in ... (in which case stat and geom parameters are automatically teased apart), or in a list called stat_params.
-
-## Position
-
-The method used to adjust overlapping objects, like jittering, stacking or dodging. More details in Section 14.7.
-
+TODO - figure showing computational pipeline
 
 With this we can start to truly understand the [usage of `geom_point()`](https://ggplot2.tidyverse.org/reference/geom_point.html) for example:
 ```
@@ -90,15 +71,68 @@ geom_point(
 )
 ```
 
+## geom defaults
 
-Using stat_summary
+The different behavior of different geoms can be seen from their parameter defaults:
+
+Parameter                | `geom_point` | `geom_boxplot` | `geom_histogram` | `geom_abline`
+------------------------ | ------------ | -------------- | ---------------- | -------------
+mapping                  | NULL         | NULL           | NULL             | NULL
+data                     | NULL         | NULL           | NULL             | NULL
+stat                     | "identity"   | "boxplot"      | "bin"            | NULL
+position                 | "identity"   | "dodge2"       | "stack"          | NULL
+show.legend              | NA           | NA             | NA               | NA
+inherit.aes              | TRUE         | TRUE           | TRUE             | FALSE
+
+
+## stats and geoms
+
+You can pass params in ... (in which case stat and geom parameters are automatically teased apart)
+
+**Every geom has a default stat, and every stat has a default geom.**
+
+Most stats take additional parameters to specify the details of statistical transformation. You can supply params either in ... (in which case stat and geom parameters are automatically teased apart), or in a list called stat_params.
+
+### Changing the stat
+
+TODO
 
 ```{r}
 ggplot(mpg, aes(class, hwy, color = displ)) + 
   geom_jitter() + 
   # stat_summary(fun = "mean", geom = "point", color = "red", size = 4)
   geom_point(stat = "summary", fun = "mean", color = "red", size = 4)
+```
 
+You might ask whether the summary point can be assigned a color corresponding to the mean of its group---i.e., whether we can use `stat_summary` to compute _both_ `mean(hwy)` and `mean(displ)`. As far as I know this is not possible; you would need to pre-compute a separate summary dataset:
+
+```{r}
+mpg_agg <- aggregate(list(hwy = mpg$hwy, displ = mpg$displ),
+                     by = list(class = mpg$class), mean)
+ggplot(mpg, aes(class, hwy, color = displ)) + 
+  geom_jitter() + 
+  geom_point(data = mpg_agg, size = 4)
+```
+
+
+### EXERCISE: stat_summary
+
+In addition to using built-in functions like `mean` that return a single value, `stat_summary` can use a user-provided function that return three values:
+
+>`fun.data`: A function that is given the complete data and should return a data frame with variables ymin, y, and ymax.
+
+**Starting from the code above, write a custom summary function to produce the following graph with a single `geom_pointrange`:**
+
+```{r, echo=FALSE}
+my_smry <- function(y) { 
+  ysd <- sd(y, na.rm = TRUE)
+  ymn <- mean(y, na.rm = TRUE)
+  data.frame(y = ymn, ymin = ymn - ysd, ymax = ymn + ysd)
+}
+
+ggplot(mpg, aes(class, hwy, color = displ)) + 
+  geom_jitter() + 
+  geom_pointrange(stat = "summary", fun.data = "my_smry", color = "red")
 ```
 
 
