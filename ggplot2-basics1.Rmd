@@ -1,5 +1,5 @@
 ---
-title: "Introduction to data visualization using ggplot2 (1)"
+title: "Introduction to data visualization using ggplot2 (part 1)"
 author: "BBL and SCP"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
@@ -9,6 +9,8 @@ output:
     toc_float: true
     code_folding: show
 ---
+
+Part 2 is [here](https://rpubs.com/bpbond/727256).
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
