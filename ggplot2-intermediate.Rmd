@@ -34,6 +34,13 @@ TODO
 
 **Goal: .**
 
+# The ggplot2 pipeline
+
+
+[Figure 13.2 from the ggplot2 book](https://ggplot2-book.org/mastery.html#fig:schematic)
+
+![](https://ggplot2-book.org/diagrams/mastery-schema.png)
+
 
 # Assumptions
 
@@ -151,5 +158,17 @@ ggplot(mpg, aes(class, hwy, color = displ)) +
 From the ggplot2 [book](https://ggplot2-book.org/scales-guides.html#scales-guides):
 
 >Formally, each scale is a function from a region in data space (the domain of the scale) to a region in aesthetic space (the range of the scale). The axis or legend is the inverse function: it allows you to convert visual properties back to data.
+
+* Every aesthetic in a plot is associated with exactly one scale.
+* The default scale depends on the aesthetic and the variable type. 
+* If you supply two scales for the same aesthetic, the last takes precedence.
+* Scale functions are of the form `scale_<aesthetic>_<type of scale>()`
+
+
+## Effective use of color
+
+"People do crap colors."  - S. Pennington
+
+TODO
 
 
