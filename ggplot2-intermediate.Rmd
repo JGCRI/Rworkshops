@@ -16,7 +16,9 @@ The introductory workshop material is here: [Part 1](https://rpubs.com/bpbond/72
 knitr::opts_chunk$set(echo = TRUE)
 library(emo)  # install via devtools::install_github("hadley/emo")
 library(ggplot2)
-theme_set(theme_minimal())
+thm <- theme_minimal()
+theme_set(thm)
+drk <- theme(panel.background = element_rect(fill = "gray"))
 ```
 
 TODO
@@ -163,12 +165,161 @@ From the ggplot2 [book](https://ggplot2-book.org/scales-guides.html#scales-guide
 * The default scale depends on the aesthetic and the variable type. 
 * If you supply two scales for the same aesthetic, the last takes precedence.
 * Scale functions are of the form `scale_<aesthetic>_<type of scale>()`
+* There are continuous scales, discrete scales, and _binned_ scales
 
+## Scale transformations
 
-## Effective use of color
+10.1.9
+When working with continuous data, the default is to map linearly from the data space onto the aesthetic space. It is possible to override this default using transformations. Every continuous scale takes a trans argument, allowing the use of a variety of transformations:
+
+| Name      | Function $f(x)$         | Inverse $f^{-1}(y)$
+|-----------|-------------------------|------------------------
+| exp       | $e ^ x$                 | $\log(y)$
+| identity  | $x$                     | $y$
+| log       | $\log(x)$               | $e ^ y$
+| log10     | $\log_{10}(x)$          | $10 ^ y$
+| logit     | $\log(\frac{x}{1 - x})$ | $\frac{1}{1 + e(y)}$
+| pow10     | $10^x$                  | $\log_{10}(y)$
+| sqrt      | $x^{1/2}$               | $y ^ 2$
+
+For many of these there are three ways to accomplish a scale-transformation task, e.g.:
+
+* `scale_x_continuous(trans = "log10")`
+* `scale_x_log10()`
+* `aes(log10(x), ...)`
+
+These all do the same thing, transforming the data _before_ any statistical summaries. Axis labeling may change however:
+
+* if you use a transformed scale, the axes will be labelled in the original data space
+* if you transform the data, the axes will be labelled in the transformed space.
+
+```{r scale-transform, fig.show="hold", out.width="50%"}
+# untransformed
+theme_update(axis.text.x = element_text(size = 20, face = "bold"),
+             title = element_text(size = 20, face = "bold"))
+df <- data.frame(x = 1:50, y = 1:50)
+
+ggplot(df, aes(x, x)) + 
+  geom_point() + ggtitle("untransformed")
+
+# manual transformation
+ggplot(df, aes(log10(x), y)) + 
+  geom_point() + ggtitle("aes(log10(x)")
+
+# transform using scales
+ggplot(df, aes(x, y)) + 
+  geom_point() + 
+  scale_x_continuous(trans = "log10") + ggtitle('trans = "log10"')
+
+# coordinate transformation
+ggplot(df, aes(x, y)) + 
+  geom_point() + 
+  coord_trans(x = "log10") +
+  ggtitle('coord_trans(x = "log10")') + drk
+theme_set(thm)
+```
+
+Less common is to transform color or size scales. An example from the [ggplot2 book](https://ggplot2-book.org/scales-guides.html#scale-transformation-extras):
+
+```{r color-transform, fig.show="hold", out.width="50%"}
+base <- ggplot(faithfuld, aes(waiting, eruptions)) + 
+  geom_raster(aes(fill = density)) + 
+  scale_x_continuous(NULL, NULL, expand = c(0, 0)) +
+  scale_y_continuous(NULL, NULL, expand = c(0, 0))
+
+base
+base + scale_fill_continuous(trans = "sqrt")
+```
+
+## Discrete scales
+
+Generally ggplot will automatically map categorical data to a discrete scale, and we don't have to think further about it.
+
+I didn't know that you can selectively replace categorical labels:
+
+```{r}
+ggplot(mpg, aes(x = hwy, y = class)) + 
+  geom_point() + 
+  scale_y_discrete(labels = c(midsize = "Ben's car"))
+```
+
+## Binned scales
+
+I did not know these existed! They do.
+
+```{r binned-scale, fig.show="hold", out.width="50%"}
+base <- ggplot(mpg, aes(hwy, class)) + geom_count()
+
+base 
+base + scale_x_binned(n.breaks = 10)
+```
+
+## Color
 
 "People do crap colors."  - S. Pennington
 
 TODO
+
+# Coordinate systems
+
+Most often we work with the default Cartesian coordinate system, `coord_cartesian()`. Two other common and useful systems are:
+
+* `coord_flip()` flips the x and y axes. Note that this is _not_ the same thing as plotting y against x
+* `coord_fixed()` is the Cartesian system with a fixed aspect ratio
+
+There are also specialized _non-linear coordinate systems_, in which the closest distance between two points may no longer be a straight line. These systems may thus change the very shape of geoms.
+
+* `coord_map()` and `coord_sf()` and for map projections
+* `coord_polar()` produces polar coordinates
+* `coord_trans()` allows you to apply arbitrary transformations to x and y
+
+```{r, fig.show="hold", out.width="50%"}
+rect <- data.frame(x = 50, y = 50)
+line <- data.frame(x = c(1, 200), y = c(100, 1))
+base <- ggplot(mapping = aes(x, y)) + 
+  geom_tile(data = rect, aes(width = 50, height = 50)) + 
+  geom_line(data = line) + 
+  xlab(NULL) + ylab(NULL)
+base + ggtitle("Cartesian")
+base + coord_flip() + ggtitle("coord_flip")
+base + coord_polar("x") + ggtitle("Polar x")
+base + coord_trans(y = "log10") + ggtitle('coord_trans(y = "log10")')
+```
+
+(Modified from an [example](https://ggplot2-book.org/coord.html#coord-non-linear) in the ggplot2 book.)
+
+## EXERCISE: coordinate flipping
+
+Is flipping the x and y coordinates the same thing as exchanging the x and y aesthetic mappings? 
+
+**Use the `cars` dataset and `geom_smooth()` to test this.**
+
+```{r coord-flip, fig.show="hold", out.width="50%", message=FALSE}
+p <- ggplot(cars, aes(speed, dist)) + geom_point() + geom_smooth()
+p
+p + coord_flip()
+ggplot(cars, aes(dist, speed)) + geom_point() + geom_smooth() + drk
+```
+
+## Coordinate limits
+
+**'Zooming into' a part of the plot is a coordinate transform, not a scale adjustment.**
+
+`coord_cartesian(xlim = c(x1, x2))`
+
+`coord_cartesian(ylim = c(y1, y2))`
+
+`coord_cartesian(xlim = c(x1, x2), ylim = c(y1, y2))`
+
+```{r zoom, fig.show="hold", out.width="50%", message=FALSE, warning=FALSE}
+theme_update(title = element_text(size = 20, face = "bold"))
+
+p <- ggplot(mpg, aes(displ, cty)) + geom_point() + geom_smooth()
+p + geom_vline(xintercept = 4, linetype = 2) + geom_vline(xintercept = 6, linetype = 2)
+p + xlim(c(4, 6)) + drk + ggtitle("xlim")
+p + scale_x_continuous(limits = c(4, 6)) + drk + ggtitle("scale limits")
+p + coord_cartesian(xlim = c(4, 6)) + ggtitle("coord_cartesian")
+theme_set(thm)
+```
 
 
