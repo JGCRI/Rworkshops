@@ -80,6 +80,16 @@ geom_point(
 )
 ```
 
+
+# Geoms and stats
+
+You can pass params in ... (in which case stat and geom parameters are automatically teased apart)
+
+Most stats take additional parameters to specify the details of statistical transformation. You can supply params either in ... (in which case stat and geom parameters are automatically teased apart), or in a list called stat_params.
+
+
+**Every geom has a default stat, and every stat has a default geom.**
+
 ## geom defaults
 
 The different behavior of different geoms can be seen from their parameter defaults:
@@ -94,13 +104,6 @@ show.legend              | NA           | NA             | NA               | NA
 inherit.aes              | TRUE         | TRUE           | TRUE             | FALSE
 
 
-## stats and geoms
-
-You can pass params in ... (in which case stat and geom parameters are automatically teased apart)
-
-**Every geom has a default stat, and every stat has a default geom.**
-
-Most stats take additional parameters to specify the details of statistical transformation. You can supply params either in ... (in which case stat and geom parameters are automatically teased apart), or in a list called stat_params.
 
 ### Changing the stat
 
@@ -126,7 +129,7 @@ ggplot(mpg, aes(class, hwy, color = displ)) +
 
 ### EXERCISE: stat_summary
 
-In addition to using built-in functions like `mean` that return a single value, `stat_summary` can use a user-provided function that return three values:
+In addition to using built-in functions like `mean` that return a single value, `stat_summary` can use a user-provided function that returns three values:
 
 >`fun.data`: A function that is given the complete data and should return a data frame with variables ymin, y, and ymax.
 
@@ -195,27 +198,30 @@ These all do the same thing, transforming the data _before_ any statistical summ
 
 ```{r scale-transform, fig.show="hold", out.width="50%"}
 # untransformed
-theme_update(axis.text.x = element_text(size = 20, face = "bold"),
+theme_update(axis.text.y = element_text(size = 20, face = "bold"),
              title = element_text(size = 20, face = "bold"))
 df <- data.frame(x = 1:50, y = 1:50)
 
-ggplot(df, aes(x, x)) + 
-  geom_point() + ggtitle("untransformed")
+ggplot(df, aes(x, y, group = 1)) + 
+  geom_boxplot() + geom_point() + 
+  ggtitle("untransformed")
 
 # manual transformation
-ggplot(df, aes(log10(x), y)) + 
-  geom_point() + ggtitle("aes(log10(x)")
+ggplot(df, aes(x, log10(y), group = 1)) + 
+  geom_boxplot() + geom_point() + 
+  ggtitle("aes(log10(y))")
 
 # transform using scales
-ggplot(df, aes(x, y)) + 
-  geom_point() + 
-  scale_x_continuous(trans = "log10") + ggtitle('trans = "log10"')
+ggplot(df, aes(x, y, group = 1)) + 
+  geom_boxplot() + geom_point() + 
+  scale_y_continuous(trans = "log10") + 
+  ggtitle('trans = "log10"')
 
 # coordinate transformation
-ggplot(df, aes(x, y)) + 
-  geom_point() + 
-  coord_trans(x = "log10") +
-  ggtitle('coord_trans(x = "log10")') + drk
+ggplot(df, aes(x, y, group = 1)) + 
+  geom_boxplot() + geom_point() + 
+  coord_trans(y = "log10") +
+  ggtitle('coord_trans(y = "log10")') + drk
 theme_set(thm)
 ```
 
