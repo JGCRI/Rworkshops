@@ -237,18 +237,19 @@ Because by default, ggplot2 converts data outside the scale limits to NA, which 
 
 The example above used a manually specified vector of labels. We can also use a _labelling function_. We can write our own, but the `scales` package provides some really useful ones:
 
-```{r scale-labels, fig.show="hold", out.width="50%"}
-theme_update(axis.text.y = element_text(size = 20, face = "bold"),
-             title = element_text(size = 20, face = "bold"))
-base <- ggplot(mpg, aes(cyl, year))
-base + ggtitle("Default scale_y_continuous()")
-base + scale_y_continuous(labels = scales::label_comma()) +
-  ggtitle("label_comma")
-base + scale_y_continuous(labels = scales::label_percent()) +
-  ggtitle("label_percent")
-base + scale_y_continuous(labels = scales::label_dollar()) +
-  ggtitle("label_dollar")
-theme_set(thm)
+```{r labeller-functions, warning=FALSE, fig.show='hold', results='hold'}
+library(scales)
+
+label_dollar()(2004)
+label_comma()(2004)
+label_percent()(2004)
+label_bytes()(2004)
+
+ggplot(cars, aes(speed, dist, color = speed)) + 
+  geom_point() +
+  scale_x_continuous(labels = label_percent()) +
+  scale_y_continuous(labels = label_dollar()) +
+  scale_color_continuous(labels = label_ordinal())
 ```
 
 
