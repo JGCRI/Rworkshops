@@ -22,6 +22,7 @@ drk <- theme(panel.background = element_rect(fill = "gray"))
 ```
 
 TODO
+
 * more worked examples/exercises?
 
 
@@ -105,11 +106,27 @@ inherit.aes              | TRUE         | TRUE           | TRUE             | FA
 
 
 
-### Changing the stat
+### Changing the `stat`
 
-TODO
+Geoms have their stats, and stats have their geoms. But we can use alternate stats within geoms, and alternate geoms within stats:
 
-```{r}
+```{r alternate-stat, fig.show="hold", out.width="50%"}
+theme_update(title = element_text(size = 20, face = "bold"))
+base <- ggplot(mpg, aes(displ, hwy))
+base + geom_point() + ggtitle("geom_point")
+base + geom_point(stat = "ecdf") + 
+  ggtitle('geom_point(stat = "ecdf")')
+ggplot(mpg, aes(displ, hwy)) + stat_ecdf() + ggtitle("stat_ecdf")
+ggplot(mpg, aes(displ, hwy)) + stat_ecdf(geom = "point") +
+  ggtitle('stat_ecdf(geom = "point")')
+theme_set(thm)
+```
+
+We can also use `stat_summary()`, a wonderful all-purpose tool.
+
+For example, what if we'd like to plot data within groups, but also display the group mean? We could summarize the data separately, and then add second `geom_point(data = ...)` call, but there's a slicker way.
+
+```{r stat-summary}
 ggplot(mpg, aes(class, hwy, color = displ)) + 
   geom_jitter() + 
   # stat_summary(fun = "mean", geom = "point", color = "red", size = 4)
@@ -118,7 +135,7 @@ ggplot(mpg, aes(class, hwy, color = displ)) +
 
 You might ask whether the summary point can be assigned a color corresponding to the mean of its group---i.e., whether we can use `stat_summary` to compute _both_ `mean(hwy)` and `mean(displ)`. As far as I know this is not possible; you would need to pre-compute a separate summary dataset:
 
-```{r}
+```{r mpg-agg}
 mpg_agg <- aggregate(list(hwy = mpg$hwy, displ = mpg$displ),
                      by = list(class = mpg$class), mean)
 ggplot(mpg, aes(class, hwy, color = displ)) + 
@@ -170,10 +187,74 @@ From the ggplot2 [book](https://ggplot2-book.org/scales-guides.html#scales-guide
 * Scale functions are of the form `scale_<aesthetic>_<type of scale>()`
 * There are continuous scales, discrete scales, and _binned_ scales
 
+## Changing scales {.tabset}
+
+Continuous and discrete scale functions have some parameters that are often used:
+
+* `name` - change the title of the axis or legend
+* `breaks` - tick locations (on an axis) or legend keys
+* `labels` - customize labels on ticks or legend keys
+* `limits` - change the scale range
+
+NOTE that the `limits` argument will **drop data** outside of the new limits, because of where this happens in the ggplot2 pipeline; see above.
+
+### cars
+
+```{r scale-changes0}
+base <- ggplot(cars, aes(speed, dist)) + geom_point()
+base
+```
+
+### `name`
+
+```{r scale-changes1}
+base + scale_x_continuous(name = "New name")
+```
+
+### `breaks`
+
+```{r scale-changes2}
+base + scale_x_continuous(breaks = c(7, 12, 13, 18, 24))
+```
+
+### `labels`
+
+```{r scale-changes3}
+base + scale_x_continuous(labels = c("", "This", "isn't", "a", "good", "idea"))
+```
+
+### `limits`
+
+```{r scale-changes4}
+base + scale_x_continuous(limits = c(10, 20))
+```
+
+**Notice the warning that occurs here. Why?**
+
+Because by default, ggplot2 converts data outside the scale limits to NA, which can affect subsequent stats and geoms.
+
+## Scale labels
+
+The example above used a manually specified vector of labels. We can also use a _labelling function_. We can write our own, but the `scales` package provides some really useful ones:
+
+```{r scale-labels, fig.show="hold", out.width="50%"}
+theme_update(axis.text.y = element_text(size = 20, face = "bold"),
+             title = element_text(size = 20, face = "bold"))
+base <- ggplot(mpg, aes(cyl, year))
+base + ggtitle("Default scale_y_continuous()")
+base + scale_y_continuous(labels = scales::label_comma()) +
+  ggtitle("label_comma")
+base + scale_y_continuous(labels = scales::label_percent()) +
+  ggtitle("label_percent")
+base + scale_y_continuous(labels = scales::label_dollar()) +
+  ggtitle("label_dollar")
+theme_set(thm)
+```
+
+
 ## Scale transformations
 
-10.1.9
-When working with continuous data, the default is to map linearly from the data space onto the aesthetic space. It is possible to override this default using transformations. Every continuous scale takes a trans argument, allowing the use of a variety of transformations:
+Continuous data are by default mapped linearly from the data space onto the aesthetic space, but this can be overridden using transformations via the `trans` argument:
 
 | Name      | Function $f(x)$         | Inverse $f^{-1}(y)$
 |-----------|-------------------------|------------------------
@@ -264,7 +345,16 @@ base + scale_x_binned(n.breaks = 10)
 
 "People do crap colors."  - S. Pennington
 
+Functions like `scale_color_discrete()` map each group to an evenly spaced hue on the color wheel.
+
 TODO
+
+# Guides
+
+Legends and axes are collectively referred to as "guides" in the ggplot2 system, and are the inverse of scales: they map visual properties back to the underlying data.
+
+
+
 
 # Coordinate systems
 
