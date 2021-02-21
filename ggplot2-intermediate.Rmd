@@ -23,7 +23,8 @@ drk <- theme(panel.background = element_rect(fill = "gray"))
 
 TODO
 
-* more worked examples/exercises?
+* section on positioning
+* 3D - end of geoms section
 
 
 # Topics
@@ -65,8 +66,6 @@ We think of geoms as layers, and that's usually true, what actually makes up a _
 * A **geom**: the geometric object used to draw each observation
 * A **stat**: the statistical transformation to use (even if it's only the “identity” stat)
 * A **position** used to adjust overlapping objects
-
-TODO - figure showing computational pipeline
 
 With this we can start to truly understand the [usage of `geom_point()`](https://ggplot2.tidyverse.org/reference/geom_point.html) for example:
 ```
@@ -475,8 +474,6 @@ TODO
 # Guides
 
 Legends and axes are collectively referred to as "guides" in the ggplot2 system, and are the inverse of scales: they map visual properties back to the underlying data.
-
-
 
 
 # Coordinate systems
