@@ -38,13 +38,6 @@ TODO
 
 **Goal: .**
 
-# The ggplot2 pipeline
-
-
-[Figure 13.2 from the ggplot2 book](https://ggplot2-book.org/mastery.html#fig:schematic)
-
-![](https://ggplot2-book.org/diagrams/mastery-schema.png)
-
 
 # Assumptions
 
@@ -54,6 +47,13 @@ TODO
 * Grammar of graphics
 * Building a plot: dataset structure, `ggplot()`, aesthetics, geoms, labels, themes, facets
 * Aesthetic and theme inheritance principles
+
+
+# The ggplot2 pipeline
+
+[Figure 13.2 from the ggplot2 book](https://ggplot2-book.org/mastery.html#fig:schematic)
+
+![](https://ggplot2-book.org/diagrams/mastery-schema.png)
 
 
 # Plot layers
@@ -82,17 +82,116 @@ geom_point(
 )
 ```
 
+# Geoms
+
+## Fundamentals
+
+Let's talk about **geoms**---geometric objects. They are the fundamental building blocks of ggplot2, and can be put into several categories. There are the basic geoms:
+
+Geom             | Requires | Understands                    | Notes
+---------------- | -------- | ------------------------------ | -------
+`geom_point()`   | `x`, `y` | `color`, `size`, ...           | cf. `geom_jitter()`
+`geom_line()`    | `x`, `y` | `color`, `size`, `linetype`... | cf. `geom_path()`
+`geom_bar()`     | `x`, `y` | `color`, `fill`, ...           | cf. `geom_col()`
+`geom_area()`    | `x` **or** `y` (also min, max) | `color`, `fill`          | cf. `geom_ribbon()`
+Polygon geoms    | `x`, `y` | `color`, `size`, `linetype`... | `geom_rect()`, `geom_tile()`, `geom_polygon()`
+
+```{r basic-geoms, message=FALSE, fig.show="hold", out.width="33%"}
+theme_update(title = element_text(size = 20, face = "bold"))
+df <- data.frame(x = c(3, 1, 5), 
+                 y = c(2, 4, 6))
+base <- ggplot(df, aes(x, y)) +
+  labs(x = NULL, y = NULL)
+
+base + geom_point() + ggtitle("point")
+base + geom_jitter() + ggtitle("jitter")
+base + geom_line() + ggtitle("line")
+base + geom_path() + ggtitle("path")
+base + geom_bar(stat = "identity") + ggtitle("bar")
+base + geom_tile() + ggtitle("tile")
+base + geom_raster() + ggtitle("raster")
+base + geom_polygon() + ggtitle("polygon")
+base + geom_area() + ggtitle("area")
+```
+
+I would also call these basic, but they have additional aesthetic requirements: `xmin`, `xmax`, `ymin`, and `ymax`:
+
+```{r minmax-geoms, message=FALSE, fig.show="hold", out.width="50%"}
+df <- data.frame(x = c(3, 1, 5), 
+                 xmin = c(2, 0, 2),
+                 xmax = c(4, 3, 5),
+                 y = c(2, 4, 6),
+                 ymin = c(1, 3, 2),
+                 ymax = c(2.5, 5, 6))
+base <- ggplot(df, aes(x, y, xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)) +
+  labs(x = NULL, y = NULL)
+
+base + geom_rect(alpha = 0.5) + ggtitle("rect")
+base + geom_ribbon() + ggtitle("ribbon")
+base + geom_errorbar() + ggtitle("errorbar")
+base + geom_pointrange() + ggtitle("pointrange")
+```
+
+## Summarizing geoms
+
+And then there are the basic statistical summary geoms:
+
+```{r ss-geoms, message=FALSE, fig.show="hold", out.width="50%"}
+base <- ggplot(mpg, aes(fill = class)) +
+  labs(x = NULL, y = NULL) +
+  theme(legend.position = "none")
+
+base + geom_histogram(aes(x = displ)) + ggtitle("histogram")
+base + geom_density(aes(x = displ)) + ggtitle("density")
+base + geom_freqpoly(aes(x = displ)) + ggtitle("freqpoly")
+base + geom_boxplot(aes(x = class, y = displ)) + ggtitle("boxplot")
+base + geom_violin(aes(x = class, y = displ)) + ggtitle("violin")
+base + geom_dotplot(aes(x = class)) + ggtitle("dotplot")
+```
+
+Note that geoms can build on each other:
+
+* `geom_histogram()` uses `geom_bar()` but a different statistical summary, `stat_bin()`
+* `geom_smooth()` (not shown above) uses `geom_line()` and `geom_ribbon()`
+
+## Overplotting
+
+When you have so many data points that they're obscuring each other, it's a problem---statistical relationship can be obscured, and the viewer can no longer see the data distribution(s).
+
+At low to moderate data densities, try changing your plot symbol:
+
+```{r overplot1, fig.show="hold", out.width="50%"}
+# Example from https://ggplot2-book.org/statistical-summaries.html#overplotting
+df <- data.frame(x = rnorm(4000), y = rnorm(4000))
+norm <- ggplot(df, aes(x, y)) + 
+  labs(x = NULL, y = NULL) 
+
+norm + geom_point()
+norm + geom_point(shape = 1) # Hollow circles
+norm + geom_point(shape = ".") # Pixel sized
+norm + geom_point(alpha = 0.1) # Pixel sized
+```
+
+At higher data densities you'll need two-dimensional density geoms:
+
+```{r overplot2, fig.show="hold", out.width="50%"}
+norm + geom_bin2d() + ggtitle("bin2d")
+norm + geom_hex() + ggtitle("hex")
+norm + geom_hex(bins = 10) + ggtitle("hex (bins = 10)")
+norm + geom_density2d() + ggtitle("density2d")
+
+theme_set(thm)
+```
+
 
 # Geoms and stats
 
-You can pass params in ... (in which case stat and geom parameters are automatically teased apart)
-
-Most stats take additional parameters to specify the details of statistical transformation. You can supply params either in ... (in which case stat and geom parameters are automatically teased apart), or in a list called stat_params.
-
-
 **Every geom has a default stat, and every stat has a default geom.**
 
-## geom defaults
+Most stats take additional parameters to specify the details of statistical transformation; these are usually supplied in `...` (in which case stat and geom parameters are automatically teased apart).
+
+
+## Geom defaults
 
 The different behavior of different geoms can be seen from their parameter defaults:
 
@@ -107,7 +206,7 @@ inherit.aes              | TRUE         | TRUE           | TRUE             | FA
 
 
 
-### Changing the `stat`
+## Changing the `stat`
 
 Geoms have their stats, and stats have their geoms. But we can use alternate stats within geoms, and alternate geoms within stats:
 
@@ -145,7 +244,7 @@ ggplot(mpg, aes(class, hwy, color = displ)) +
 ```
 
 
-### EXERCISE: stat_summary
+## EXERCISE: stat_summary
 
 In addition to using built-in functions like `mean` that return a single value, `stat_summary` can use a user-provided function that returns three values:
 
@@ -154,17 +253,6 @@ In addition to using built-in functions like `mean` that return a single value, 
 **Starting from the code above, write a custom summary function to produce the following graph:**
 
 ```{r exercise-stat-summary, echo=FALSE}
-my_smry <- function(y) { 
-  ysd <- sd(y, na.rm = TRUE)
-  ymn <- mean(y, na.rm = TRUE)
-  data.frame(y = ymn, ymin = ymn - ysd, ymax = ymn + ysd)
-}
-
-ggplot(mpg, aes(class, hwy, color = displ)) + 
-  geom_jitter() + 
-  geom_pointrange(stat = "summary", fun.data = "my_smry", color = "red")
-```
-```{r, eval=FALSE}
 my_smry <- function(y) { 
   ysd <- sd(y, na.rm = TRUE)
   ymn <- mean(y, na.rm = TRUE)
