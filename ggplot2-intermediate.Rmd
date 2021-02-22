@@ -23,8 +23,9 @@ drk <- theme(panel.background = element_rect(fill = "gray"))
 
 TODO
 
-* section on positioning
-* 3D - end of geoms section
+* Positioning
+* Guides section
+* Labeling points
 
 
 # Topics
@@ -42,7 +43,7 @@ TODO
 
 # Assumptions
 
-<span style="color: red;">**We assume you're familiar with the basic mechanics of ggplot2**</span> as covered in the introductory workshop:
+<span style="color: red;">**I assume you're familiar with the basic mechanics of ggplot2**</span> as covered in the introductory workshop:
 
 * Data visualization concepts
 * Grammar of graphics
@@ -81,7 +82,24 @@ geom_point(
 )
 ```
 
+# Datasets and mappings
+
+![](images-ggplot2/ggplot2-layer.png)
+We're not spending much time on these today.
+
+Key point: different plot layers may, but don't have to, have different data sources and aesthetics.
+
+## EXERCISE: plot layers
+
+**How was this plots built?** What layers and data sources can you see?
+
+![](https://www.pewresearch.org/wp-content/uploads/2014/12/FT_14.10.14_SSMtrend_640px.png)
+
+From [Our favorite Pew Research Center data visualizations from 2014](https://www.pewresearch.org/fact-tank/2014/12/29/our-favorite-pew-research-center-data-visualizations-from-2014/)
+
 # Geoms
+
+![](images-ggplot2/ggplot2-layer-stat-geom.png)
 
 ## Fundamentals
 
@@ -182,13 +200,17 @@ norm + geom_density2d() + ggtitle("density2d")
 theme_set(thm)
 ```
 
+## Position adjustments
+
+
 
 # Geoms and stats
+
+![](images-ggplot2/ggplot2-layer-stat-geom.png)
 
 **Every geom has a default stat, and every stat has a default geom.**
 
 Most stats take additional parameters to specify the details of statistical transformation; these are usually supplied in `...` (in which case stat and geom parameters are automatically teased apart).
-
 
 ## Geom defaults
 
@@ -203,7 +225,12 @@ position                 | "identity"   | "dodge2"       | "stack"          | NU
 show.legend              | NA           | NA             | NA               | NA
 inherit.aes              | TRUE         | TRUE           | TRUE             | FALSE
 
+Some questions to think about:
 
+* Why does `geom_abline()` not inherit aesthetics?
+* What's the difference between `geom_point()` and `geom_jitter()`? (Look at the help.)
+* What’s the difference between `geom_path()` and `geom_polygon()`?
+* What about `geom_path()` versus `geom_line()`?
 
 ## Changing the `stat`
 
@@ -220,6 +247,8 @@ ggplot(mpg, aes(displ, hwy)) + stat_ecdf(geom = "point") +
   ggtitle('stat_ecdf(geom = "point")')
 theme_set(thm)
 ```
+
+## `stat_summary()`
 
 We can also use `stat_summary()`, a wonderful all-purpose tool.
 
@@ -249,9 +278,9 @@ In addition to using built-in functions like `mean` that return a single value, 
 
 >`fun.data`: A function that is given the complete data and should return a data frame with variables ymin, y, and ymax.
 
-**Starting from the code above, write a custom summary function to produce the following graph:**
+**Starting from `ggplot(mpg, aes(class, hwy, color = displ))`, write a custom summary function to produce the following graph:**
 
-```{r exercise-stat-summary, echo=FALSE}
+```{r exercise-stat-summary}
 my_smry <- function(y) { 
   ysd <- sd(y, na.rm = TRUE)
   ymn <- mean(y, na.rm = TRUE)
@@ -264,6 +293,8 @@ ggplot(mpg, aes(class, hwy, color = displ)) +
 ```
 
 # Scales
+
+![](images-ggplot2/ggplot2-layer-scales.png)
 
 From the ggplot2 [book](https://ggplot2-book.org/scales-guides.html#scales-guides):
 
@@ -339,40 +370,6 @@ ggplot(cars, aes(speed, dist, color = speed)) +
   scale_y_continuous(labels = label_dollar()) +
   scale_color_continuous(labels = label_ordinal())
 ```
-
-## Math
-
-We can include arbitrary mathematical expression in almost any text in ggplot2: axis and legend titles, facet titles, legend entries. This uses R's `plotmath()` facility and interprets a text argument as a mathematical expression. 
-
-[This page](https://astrostatistics.psu.edu/su07/R/html/grDevices/html/plotmath.html) has a handy list of plotmath examples; see also `?plotmath`.
-
-How this is implemented in ggplot2 can feel frustratingly arbitrary, and I find myself experimenting and googling a lot:
-
-```{r plotmath}
-ggplot(mpg, aes(displ, hwy, color = class)) + geom_point() +
-  # Axis labels will parse expressions by default
-  xlab(expression(paste(Displacement~hat(x), " (in", phantom()^3, ")"))) +
-  # Another way
-  labs(y = quote(Highway~(mu))) +
-  scale_color_discrete(labels = c(expression(alpha), 
-                                  expression(beta), 
-                                  expression(gamma)))
-```
-
-It is also possible to include Markdown in axis and legend titles using the `ggtext` package.
-
-```{r markdown, fig.show="hold", out.width="50%", warning=FALSE}
-library(ggtext)
-df <- data.frame(x = 1:3, y = 1:3)
-base <- ggplot(df, aes(x, y)) + 
-  geom_point() + 
-  labs(x = "Axis title with *italics* and **boldface**") +
-  theme(axis.title.x = element_text(size = 20))
-
-base 
-base + theme(axis.title.x = ggtext::element_markdown())
-```
-
 
 ## Scale transformations
 
@@ -478,6 +475,8 @@ Legends and axes are collectively referred to as "guides" in the ggplot2 system,
 
 # Coordinate systems
 
+![](images-ggplot2/ggplot2-layer-scales.png)
+
 Most often we work with the default Cartesian coordinate system, `coord_cartesian()`. Two other common and useful systems are:
 
 * `coord_flip()` flips the x and y axes. Note that this is _not_ the same thing as plotting y against x
@@ -540,9 +539,11 @@ theme_set(thm)
 
 # Annotations
 
-Labeling points
+![](images-ggplot2/ggplot2-layer-annotations.png)
 
-Shading
+## Labeling points
+
+## Shading
 
 ```{r economics}
 pres <- subset(presidential, start >= economics$date[1])
@@ -579,3 +580,46 @@ ggplot(mpg, aes(displ, hwy)) +
   ggforce::geom_mark_ellipse(aes(label = cyl, group = cyl))
 ```
 
+## Math
+
+We can include arbitrary mathematical expression in almost any text in ggplot2: axis and legend titles, facet titles, legend entries. This uses R's `plotmath()` facility and interprets a text argument as a mathematical expression. 
+
+[This page](https://astrostatistics.psu.edu/su07/R/html/grDevices/html/plotmath.html) has a handy list of plotmath examples; see also `?plotmath`.
+
+How this is implemented in ggplot2 can feel frustratingly arbitrary, and I find myself experimenting and googling a lot:
+
+```{r plotmath}
+ggplot(mpg, aes(displ, hwy, color = class)) + geom_point() +
+  # Axis labels will parse expressions by default
+  xlab(expression(paste(Displacement~hat(x), " (in", phantom()^3, ")"))) +
+  # Another way
+  labs(y = quote(Highway~(mu))) +
+  scale_color_discrete(labels = c(expression(alpha), 
+                                  expression(beta), 
+                                  expression(gamma)))
+```
+
+It is also possible to include Markdown in axis and legend titles using the `ggtext` package.
+
+```{r markdown, fig.show="hold", out.width="50%", warning=FALSE}
+library(ggtext)
+df <- data.frame(x = 1:3, y = 1:3)
+base <- ggplot(df, aes(x, y)) + 
+  geom_point() + 
+  labs(x = "Axis title with *italics* and **boldface**") +
+  theme(axis.title.x = element_text(size = 20))
+
+base 
+base + theme(axis.title.x = ggtext::element_markdown())
+```
+
+# End
+
+Things we didn't talk about:
+
+* Maps, networks, 3D plots
+* Polar coordinates (much)
+
+Resources
+
+* The [ggplot2 book](https://ggplot2-book.org/index.html). No, really.
