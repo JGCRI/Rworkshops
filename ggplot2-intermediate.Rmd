@@ -517,13 +517,40 @@ base
 base + scale_x_binned(n.breaks = 10)
 ```
 
-## Color
+## Color Crash Course
 
-"People do crap colors."  - S. Pennington
+> "There are three fundamental use cases for color in data visualizations: (i) we can use color to distinguish groups of data from each other;  (ii) we can use color to represent data values; and (iii) we can use color to highlight." - Claus Wilke, _Fundamentals of Data Visualization_
 
-Functions like `scale_color_discrete()` map each group to an evenly spaced hue on the color wheel.
+![](images-ggplot2/ggplot2-int-color1.jpg)
 
-TODO
+The **tl;dr** of color theory is that color choices matter, and will create more impactful figures to communicate research more effectively. Colors opposite each other on the color star above are _complimentary_ and look good together. Why? Because [SCIENCE](https://www.smithsonianmag.com/smart-news/the-scientific-reason-complementary-colors-look-good-together-114030051/#:~:text=Complementary%20colors%20are%20especially%20pleasing,color%20spectrum%2C%20Apartment%20Therapy%20explains.&text=You'll%20see%20a%20faint%20orange%20afterimage%E2%80%94blue's%20opposite%20color.). Photoreceptor cells in your eyes like **balance**.
+
+### 1. Be consistent 
+
+![](images-ggplot2/ggplot2-int-color2.png)
+
+From: [How to Choose Colors for Your Data Visualizations](https://medium.com/nightingale/how-to-choose-the-colors-for-your-data-visualizations-50b2557fa335) by Michael Yi 
+
+Keep variables the same color throughout a presentation or paper. This helps viewers understand and follow the **story of your data** throughout.
+
+### 2. Be intentional
+
+The following example is from Claus Wilke's [Fundamentals of Data Visualization book](https://clauswilke.com/dataviz/index.html) (which I highly recommend) **Why is this figure "bad"?**
+
+![](images-ggplot2/ggplot2-int-color3.png)
+
+> "Even if with a lot of effort we can figure out exactly which state is which, this visualization defeats the purpose of coloring. 
+> We should use color to enhance figures and make them easier to read, not to obscure the data by creating visual puzzles."
+
+- Coloring the points by region offers an additional way to _interpret_ the data. Don't color for the sake of coloring. Color should have a clear purpose in a figure.
+
+![](images-ggplot2/ggplot2-int-color4.png)
+
+### 3. Be inclusive
+
+- https://colorbrewer2.org/ allows you to filter through `colorbrewer` palettes and select colorblind safe, print friendly, and/or photocopy safe colors
+- `viridis` is a popuar color palette package that is colorblind-friendly
+- `colorblindr` is a package that shows what your plot looks like in different color-vision-deficiency simulations
 
 # Guides
 
