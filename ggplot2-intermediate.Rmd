@@ -26,8 +26,6 @@ TODO
 * Guides section
 * Labeling points
 * SP's color section
-* First exercise -- maybe go back to economics example
-* fix dotplot example
 * one more exercise in the Scales section
 
 # Topics
@@ -165,7 +163,7 @@ base + geom_density(aes(x = displ)) + ggtitle("density")
 base + geom_freqpoly(aes(x = displ)) + ggtitle("freqpoly")
 base + geom_boxplot(aes(x = class, y = displ)) + ggtitle("boxplot")
 base + geom_violin(aes(x = class, y = displ)) + ggtitle("violin")
-base + geom_dotplot(aes(x = class)) + ggtitle("dotplot")
+base + geom_dotplot(aes(x = class), stackratio = 0.35) + ggtitle("dotplot")
 ```
 
 Note that geoms can build on each other:
@@ -279,7 +277,7 @@ theme_set(thm)
 
 ## `stat_summary()`
 
-We can also use `stat_summary()`, a wonderful all-purpose tool.
+We can also use `stat_summary()`, a useful (but not all-purpose, see below) tool.
 
 For example, what if we'd like to plot data within groups, but also display the group mean? We could summarize the data separately, and then add second `geom_point(data = ...)` call, but there's a slicker way.
 
@@ -300,7 +298,6 @@ ggplot(mpg, aes(class, hwy, color = displ)) +
   geom_point(data = mpg_agg, size = 4)
 ```
 
-
 ## EXERCISE: stat_summary
 
 In addition to using built-in functions like `mean` that return a single value, `stat_summary` can use a user-provided function that returns three values:
@@ -320,6 +317,9 @@ ggplot(mpg, aes(class, hwy, color = displ)) +
   geom_jitter() + 
   geom_pointrange(stat = "summary", fun.data = "my_smry", color = "red")
 ```
+
+Finally, I tend not to use the explicit `stat_*` functionality of ggplot2 all that much; in general I find it simpler and clearer to pre-compute my summary statistics separate and then visualize them using the default geoms. YMMV however. 
+
 
 # Scales
 
@@ -591,6 +591,8 @@ ggplot(economics) +
             aes(x = start, y = 0.025, label = name))
 ```
 
+## Other useful packages
+
 The `ggrepel` package provides a useful variant on `geom_text` that attempts to space text labels out nicely:
 
 ```{r, fig.show="hold", out.width="50%"}
@@ -603,7 +605,7 @@ base + geom_text()
 base + ggrepel::geom_text_repel()
 ```
 
-The `ggforce` package for example:
+We can also use the `ggforce` package to label entire groups nicely:
 
 ```{r}
 ggplot(mpg, aes(displ, hwy)) +
