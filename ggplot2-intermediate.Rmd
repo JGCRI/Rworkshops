@@ -97,6 +97,15 @@ Key point: different plot layers may, but don't have to, have different data sou
 
 From [Our favorite Pew Research Center data visualizations from 2014](https://www.pewresearch.org/fact-tank/2014/12/29/our-favorite-pew-research-center-data-visualizations-from-2014/)
 
+## mpg
+
+Many of the examples below will use ggplot2's [mpg dataset](https://ggplot2.tidyverse.org/reference/mpg.html).
+
+>This dataset contains a subset of the fuel economy data that the EPA makes available on http://fueleconomy.gov. It contains only models which had a new release every year between 1999 and 2008 - this was used as a proxy for the popularity of the car.
+
+Let's take a quick look at `mpg` before going farther.
+
+
 # Geoms
 
 ![](images-ggplot2/ggplot2-layer-stat-geom.png)
@@ -318,7 +327,7 @@ ggplot(mpg, aes(class, hwy, color = displ)) +
   geom_pointrange(stat = "summary", fun.data = "my_smry", color = "red")
 ```
 
-Finally, I tend not to use the explicit `stat_*` functionality of ggplot2 all that much; in general I find it simpler and clearer to pre-compute my summary statistics separate and then visualize them using the default geoms. YMMV however. 
+Finally, though, I tend not to use the explicit `stat_*` functionality of ggplot2 all that much; in general I find it simpler and clearer to pre-compute my summary statistics and then visualize them using the default geoms. YMMV however. 
 
 
 # Scales
@@ -383,7 +392,7 @@ base + scale_x_continuous(limits = c(10, 20))
 
 ## Scale labels
 
-The example above used a manually specified vector of labels. We can also use a _labelling function_. We can write our own, but the `scales` package provides some really useful ones:
+The example above used a manually specified vector of labels. We can also use a _labelling function_; the `scales` package provides some really useful ones:
 
 ```{r labeller-functions, warning=FALSE, fig.show='hold', results='hold'}
 library(scales)
@@ -399,6 +408,23 @@ ggplot(cars, aes(speed, dist, color = speed)) +
   scale_y_continuous(labels = label_dollar()) +
   scale_color_continuous(labels = label_ordinal())
 ```
+
+We can also write our own labeling function:
+
+```{r}
+metric_label <- function(x) {
+  # convert mpg to km/l
+  round(x * 1.6 * 0.264172, 2)
+}
+
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point() + 
+  scale_y_continuous(labels = metric_label) +
+  ylab("Km per liter")
+```
+
+Note that this _only_ changes the labels on the lines. We could also have created a custom scale or a custom coordinate transform (see below).
+
 
 ## Scale transformations
 
@@ -466,6 +492,8 @@ base
 base + scale_fill_continuous(trans = "sqrt")
 ```
 
+We can also create our own [custom scale transformations](https://scales.r-lib.org//reference/trans_new.html), but this is beyond the scope of this workshop.
+
 ## Discrete scales
 
 Generally ggplot will automatically map categorical data to a discrete scale, and we don't have to think further about it.
@@ -500,6 +528,26 @@ TODO
 # Guides
 
 Legends and axes are collectively referred to as "guides" in the ggplot2 system, and are the inverse of scales: they map visual properties back to the underlying data.
+
+**The single most common Google search I perform is "ggplot remove legend", so let's get that out of the way:**
+
+* Hide the entire legend: `p + theme(legend.position = "none")`
+* Hide the legend for a specific geometry: `p + geom_xxx(show.legend = FALSE)`
+
+Legend positioning is changed via the theme system.
+
+One useful trick to know about is the `override.aes` parameter of `guide_legend()`.
+
+```{r override.aes, fig.show="hold", out.width="50%"}
+base <- ggplot(mpg, aes(displ, hwy, color = class)) + 
+  geom_point() +
+  theme(legend.position = c(0.75, 0.75))
+
+base
+base + guides(colour = guide_legend(override.aes = list(size = 5)))
+```
+
+While working on this I wondered if the legend text entries could be colored to follow a plot aesthetic. Answer: it's [possible but a bit gnarly](https://stackoverflow.com/questions/23588127/match-legend-text-color-in-geom-text-to-symbol).
 
 
 # Coordinate systems
