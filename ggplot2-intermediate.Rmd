@@ -23,10 +23,11 @@ drk <- theme(panel.background = element_rect(fill = "gray"))
 
 TODO
 
-* Positioning
 * Guides section
 * Labeling points
-
+* SP's color section
+* First exercise -- maybe go back to economics example
+* fix dotplot example
 
 # Topics
 
@@ -38,7 +39,7 @@ TODO
 * Expressions
 * Annotations
 
-**Goal: .**
+**Goal: understand what constitutes a ggplot _layer_, the relationship between _stats_ and _geoms_, and the difference between _scale transformations_ and _coordinate transformations_.**
 
 
 # Assumptions
@@ -202,6 +203,33 @@ theme_set(thm)
 
 ## Position adjustments
 
+Each geom has a `position` parameter that specifies how minor and/or group-wise position adjustments are to be handled.
+
+```{r position1, fig.show="hold", out.width="50%"}
+theme_update(title = element_text(size = 20, face = "bold"))
+base <- ggplot(mpg, aes(cty, fill = class)) + 
+  xlab(NULL) + ylab(NULL) + theme(legend.position = "none")
+
+base + geom_bar() + ggtitle("stack") # the default
+base + geom_bar(position = "dodge") + ggtitle("dodge")
+base + geom_bar(position = "fill") + ggtitle("fill")
+base + geom_bar(position = "identity") + ggtitle("identity")
+```
+
+Some position adjustments are particularly useful for points:
+
+```{r position2, fig.show="hold", out.width="50%"}
+base <- ggplot(mpg, aes(displ, cty, color = class)) + 
+  xlab(NULL) + ylab(NULL) + theme(legend.position = "none")
+
+base + geom_point() + ggtitle("identity") # the default
+base + geom_point(position = position_nudge(x = 2, y = -2)) + ggtitle("nudge")
+base + geom_point(position = "jitter") + ggtitle("jitter")
+theme_set(thm)
+```
+
+Note that to change the adjustment defaults, you need to construct
+a position object with the desired parameters (see `position_nudge()` example above).
 
 
 # Geoms and stats
@@ -542,6 +570,8 @@ theme_set(thm)
 ![](images-ggplot2/ggplot2-layer-annotations.png)
 
 ## Labeling points
+
+TODO
 
 ## Shading
 
