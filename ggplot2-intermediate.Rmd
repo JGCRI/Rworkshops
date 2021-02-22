@@ -28,6 +28,7 @@ TODO
 * SP's color section
 * First exercise -- maybe go back to economics example
 * fix dotplot example
+* one more exercise in the Scales section
 
 # Topics
 
