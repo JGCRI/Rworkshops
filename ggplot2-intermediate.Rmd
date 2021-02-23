@@ -31,12 +31,12 @@ drk <- theme(panel.background = element_rect(fill = "gray"))
 * Expressions
 * Annotations
 
-**Goal: understand what constitutes a ggplot _layer_, the relationship between _stats_ and _geoms_, and the difference between _scale transformations_ and _coordinate transformations_.**
+**<span style="color: red;">Goal: clearer, more effective data visualizations.</span> This will involve understanding what constitutes a ggplot _layer_, the relationship between _stats_ and _geoms_, and the difference between _scale transformations_ and _coordinate transformations_.**
 
 
 # Assumptions
 
-<span style="color: red;">**I assume you're familiar with the basic mechanics of ggplot2**</span> as covered in the introductory workshop:
+**I assume you're familiar with the basic mechanics of ggplot2** as covered in the introductory workshop (links above):
 
 * The fundamentals of R and ggplot2
 * Basic data visualization concepts
