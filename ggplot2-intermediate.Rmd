@@ -177,7 +177,7 @@ Note that geoms can build on each other:
 
 When you have so many data points that they're obscuring each other, it's a problem---statistical relationship can be obscured, and the viewer can no longer see the data distribution(s).
 
-At low to moderate data densities, try changing your plot symbol:
+At low to moderate data densities, try changing your plot symbol, size, or transparency:
 
 ```{r overplot1, fig.show="hold", out.width="50%"}
 # Example from https://ggplot2-book.org/statistical-summaries.html#overplotting
@@ -214,7 +214,8 @@ base <- ggplot(mpg, aes(cty, fill = class)) +
 base + geom_bar() + ggtitle("stack") # the default
 base + geom_bar(position = "dodge") + ggtitle("dodge")
 base + geom_bar(position = "fill") + ggtitle("fill")
-base + geom_bar(position = "identity") + ggtitle("identity")
+base + geom_bar(position = "identity") + ggtitle("identity") +
+  theme(panel.background = element_rect(fill = "gray"))
 ```
 
 Some position adjustments are particularly useful for points:
@@ -418,7 +419,6 @@ ggplot(mpg, aes(displ, hwy)) +
 
 Note that this _only_ changes the labels on the lines. We could also have created a custom scale or a custom coordinate transform (see below).
 
-
 ## Scale transformations
 
 Continuous data are by default mapped linearly from the data space onto the aesthetic space, but this can be overridden using transformations via the `trans` argument:
@@ -531,6 +531,8 @@ ggplot(d) +
             color = "white", size = 0.1)
 ```
 
+To set a different continuous color scale:
+
 * `scale_fill/color_gradient()` produces a two-color gradient
 * `scale_fill/color_gradient2()` produces a three-color gradient with specified midpoint
 * `scale_fill/color_gradientn()` produces an n-color gradient
@@ -551,7 +553,6 @@ base + scale_fill_distiller(palette = "YlOrBr")
 base + scale_fill_gradient2()
 ```
 
-
 **How do you know what colors to use?** On a technical level, there are several useful tools:
 
 * Mac users have the "Digital Color Meter" in their Utilities folder; so handy!
@@ -564,7 +565,7 @@ scales::show_col(hue_pal()(9))
 
 More fundamentally, however, it's time for...
 
-### Color crash course
+## Color crash course
 
 > "There are three fundamental use cases for color in data visualizations: (i) we can use color to distinguish groups of data from each other;  (ii) we can use color to represent data values; and (iii) we can use color to highlight." - Claus Wilke, _Fundamentals of Data Visualization_
 
@@ -600,6 +601,7 @@ Many people (~10% of men) do not possess the normal complement of color receptor
 - https://colorbrewer2.org/ allows you to filter through `colorbrewer` palettes and select colorblind safe, print friendly, and/or photocopy safe colors
 - `viridis` is a popular color palette package that is colorblind-friendly
 - The `colorblindr` and `dichromat` packages shows what your plot looks like in different color-vision-deficiency simulations
+
 
 # Guides
 
@@ -690,15 +692,37 @@ p + coord_cartesian(xlim = c(4, 6)) + ggtitle("coord_cartesian")
 theme_set(thm)
 ```
 
+
 # Annotations
 
 ![](images-ggplot2/ggplot2-layer-annotations.png)
 
-## Labeling points
+Good annotations guide and clarify for your viewers, and you should know ggplot2's `annotate()` function.
 
-TODO
+For example, we may want to annotate individual points:
 
-## Shading
+```{r}
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(data = subset(mpg, manufacturer == "subaru"), 
+             colour = "orange",
+             size = 3) +
+  geom_point() + 
+  annotate(geom = "curve", 
+           x = 4, y = 35, xend = 2.65, yend = 27, 
+           curvature = 0.3, arrow = arrow(length = unit(2, "mm"))) +
+  annotate(geom = "text", x = 4.1, y = 35, label = "subaru", hjust = "left")
+```
+
+This can be very effective across facets:
+
+```{r}
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(data = mpg[c("displ", "hwy")], color = "grey") +
+  geom_point(aes(colour = factor(cyl))) +
+  facet_wrap(~cyl)
+```
+
+Shading can provide a _very_ effective way to annotate data:
 
 ```{r economics}
 pres <- subset(presidential, start >= economics$date[1])
@@ -719,7 +743,7 @@ ggplot(economics) +
 
 The `ggrepel` package provides a useful variant on `geom_text` that attempts to space text labels out nicely:
 
-```{r, fig.show="hold", out.width="50%"}
+```{r ggrepel, fig.show="hold", out.width="50%"}
 base <- ggplot(mtcars,
   aes(wt, mpg, label = rownames(mtcars), colour = factor(cyl))) +
   geom_point() + 
@@ -731,10 +755,23 @@ base + ggrepel::geom_text_repel()
 
 We can also use the `ggforce` package to label entire groups nicely:
 
-```{r}
+```{r ggforce}
 ggplot(mpg, aes(displ, hwy)) +
   geom_point(aes(color = class)) + 
   ggforce::geom_mark_ellipse(aes(label = cyl, group = cyl))
+```
+
+`ggpmisc` provide a `geom_table()` and (like the `cowplot` and `patchwork` packages) facilities for making inset tables and plots:
+
+```{r ggpmisc}
+library(ggpmisc)
+
+tb <- aggregate(list(hwy = mpg$hwy, cty = mpg$cty), by = list(cyl = mpg$cyl), median)
+data.tb <- tibble::tibble(x = 6, y = 44, tb = list(tb))
+
+ggplot(mpg, aes(displ, hwy, colour = factor(cyl))) +
+  geom_table(data = data.tb, aes(x, y, label = tb)) +
+  geom_point() 
 ```
 
 ## Math
@@ -776,7 +813,9 @@ Things we didn't talk about:
 
 * Maps, networks, 3D plots
 * Polar coordinates (much)
+* Assembling multiple plots together
 
 Resources
 
-* The [ggplot2 book](https://ggplot2-book.org/index.html). No, really.
+* The [ggplot2 book](https://ggplot2-book.org/index.html). No, really
+* The [repository](https://github.com/JGCRI/Rworkshops) for this presentation, including its [RMarkdown file](https://github.com/JGCRI/Rworkshops/blob/master/ggplot2-intermediate.Rmd)
