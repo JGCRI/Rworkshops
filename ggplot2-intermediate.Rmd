@@ -813,7 +813,7 @@ Things we didn't talk about:
 
 * Maps, networks, 3D plots
 * Polar coordinates (much)
-* Assembling multiple plots together
+* Assembling multiple plots together. My go-to is [cowplot](https://wilkelab.org/cowplot/articles/plot_grid.html) but the newer [patchwork](https://patchwork.data-imaginist.com/) is worth checking out.
 
 Resources
 
