@@ -38,7 +38,8 @@ drk <- theme(panel.background = element_rect(fill = "gray"))
 
 <span style="color: red;">**I assume you're familiar with the basic mechanics of ggplot2**</span> as covered in the introductory workshop:
 
-* Data visualization concepts
+* The fundamentals of R and ggplot2
+* Basic data visualization concepts
 * Grammar of graphics
 * Building a plot: dataset structure, `ggplot()`, aesthetics, geoms, labels, themes, facets
 * Aesthetic and theme inheritance principles
@@ -46,7 +47,7 @@ drk <- theme(panel.background = element_rect(fill = "gray"))
 
 # The ggplot2 pipeline
 
-[Figure 13.2 from the ggplot2 book](https://ggplot2-book.org/mastery.html#fig:schematic)
+Today we're loosely following the ggplot2 visualization pipeline as [given in Figure 13.2 from the ggplot2 book](https://ggplot2-book.org/mastery.html#fig:schematic). It's important to understand the most important parts of this sequence, because their order determines functionality.
 
 ![](https://ggplot2-book.org/diagrams/mastery-schema.png)
 
@@ -80,7 +81,7 @@ geom_point(
 ![](images-ggplot2/ggplot2-layer.png)
 We're not spending much time on these today.
 
-Key point: different plot layers may, but don't have to, have different data sources and aesthetics.
+Key point: different plot layers may, but don't have to, have different data sources and aesthetics that override the plot-level ones defined in `ggplot()`.
 
 ## EXERCISE: plot layers
 
@@ -90,18 +91,17 @@ Key point: different plot layers may, but don't have to, have different data sou
 
 From [Our favorite Pew Research Center data visualizations from 2014](https://www.pewresearch.org/fact-tank/2014/12/29/our-favorite-pew-research-center-data-visualizations-from-2014/)
 
+
+# Geoms
+
+![](images-ggplot2/ggplot2-layer-stat-geom.png)
 ## mpg
 
 Many of the examples below will use ggplot2's [mpg dataset](https://ggplot2.tidyverse.org/reference/mpg.html).
 
 >This dataset contains a subset of the fuel economy data that the EPA makes available on http://fueleconomy.gov. It contains only models which had a new release every year between 1999 and 2008 - this was used as a proxy for the popularity of the car.
 
-Let's take a quick look at `mpg` before going farther.
-
-
-# Geoms
-
-![](images-ggplot2/ggplot2-layer-stat-geom.png)
+Take a quick look at `mpg` before going farther.
 
 ## Fundamentals
 
@@ -175,7 +175,7 @@ Note that geoms can build on each other:
 
 ## Overplotting
 
-When you have so many data points that they're obscuring each other, it's a problem---statistical relationship can be obscured, and the viewer can no longer see the data distribution(s).
+Whether you use a 'basic' geom, or a statistical summary geom, depends on a number of factors...but one of them is simply data _volume_. When you have so many data points that they're obscuring each other, it's a problem---statistical relationship can be obscured, and the viewer can no longer see the data distribution(s).
 
 At low to moderate data densities, try changing your plot symbol, size, or transparency:
 
@@ -614,6 +614,8 @@ Legends and axes are collectively referred to as "guides" in the ggplot2 system,
 
 Legend positioning is changed via the theme system.
 
+More generally, legends are _complicated_, both over and under the hood.
+
 One useful trick to know about is the `override.aes` parameter of `guide_legend()`.
 
 ```{r override.aes, fig.show="hold", out.width="50%"}
@@ -753,7 +755,7 @@ base + geom_text()
 base + ggrepel::geom_text_repel()
 ```
 
-We can also use the `ggforce` package to label entire groups nicely:
+We can also use the `ggforce` package to label entire groups:
 
 ```{r ggforce}
 ggplot(mpg, aes(displ, hwy)) +
@@ -763,7 +765,7 @@ ggplot(mpg, aes(displ, hwy)) +
 
 `ggpmisc` provide a `geom_table()` and (like the `cowplot` and `patchwork` packages) facilities for making inset tables and plots:
 
-```{r ggpmisc}
+```{r ggpmisc, warning=FALSE}
 library(ggpmisc)
 
 tb <- aggregate(list(hwy = mpg$hwy, cty = mpg$cty), by = list(cyl = mpg$cyl), median)
