@@ -510,6 +510,23 @@ base
 base + scale_x_binned(n.breaks = 10)
 ```
 
+## Reordering categories
+
+By default ggplot2 puts categorical factors into alphabetical order, but you might want to change this; commonly, for example, we'd like to order by the value of some other variable.
+
+This can be done in base R but the `forcats` package offers a super-simple method:
+
+```{r}
+ggplot(mpg, aes(class, cty, color=class)) + 
+  geom_jitter(show.legend = FALSE)
+
+library(forcats)  # h/t SCP
+ggplot(mpg, aes(fct_reorder(class, cty), cty, color=class)) + 
+  geom_jitter(show.legend = FALSE)
+
+```
+
+
 ## Color
 
 There are lots of ways to specify color; for example the HCL (hue-chroma-luminance) space.
