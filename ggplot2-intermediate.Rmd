@@ -517,15 +517,13 @@ By default ggplot2 puts categorical factors into alphabetical order, but you mig
 This can be done in base R but the `forcats` package offers a super-simple method:
 
 ```{r}
-ggplot(mpg, aes(class, cty, color=class)) + 
+ggplot(mpg, aes(class, cty, color = class)) + 
   geom_jitter(show.legend = FALSE)
 
 library(forcats)  # h/t SCP
-ggplot(mpg, aes(fct_reorder(class, cty), cty, color=class)) + 
+ggplot(mpg, aes(fct_reorder(class, cty), cty, color = class)) + 
   geom_jitter(show.legend = FALSE)
-
 ```
-
 
 ## Color
 
